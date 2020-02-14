@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Note Keeper</string>
+    <string name="enter_text">Note text</string>
+    <string name="enter_title">Note title</string>
+</resources>

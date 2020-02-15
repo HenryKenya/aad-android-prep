@@ -12,7 +12,8 @@ import java.util.List;
 
 public class NoteActivity extends AppCompatActivity {
 
-    public static final String NOTE_INFO = "com.example.notekeeper.NOTE_INFO";
+    public static final String NOTE_POSITION = "com.example.notekeeper.NOTE_POSITION";
+    public static final int POSITION_NOT_SET = -1;
     private NoteInfo note;
     private boolean isNewNote;
 
@@ -48,7 +49,10 @@ public class NoteActivity extends AppCompatActivity {
 
     private void readDisplayStateValues() {
         Intent intent = getIntent();
-        note = intent.getParcelableExtra(NOTE_INFO);
-        isNewNote = note == null;
+        int position = intent.getIntExtra(NOTE_POSITION, POSITION_NOT_SET);
+        isNewNote = position == POSITION_NOT_SET;
+        if (!isNewNote) {
+            note = DataManager.getInstance().getNotes().get(position);
+        }
     }
 }

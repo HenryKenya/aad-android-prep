@@ -5,4 +5,5 @@
     <string name="title_activity_note_list">NoteListActivity</string>
     <string name="edit_note">Edit Note</string>
     <string name="share_as_email">Share as email</string>
+    <string name="cancel">Cancel</string>
 </resources>

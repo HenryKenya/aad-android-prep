@@ -23,6 +23,8 @@ public class NoteActivity extends AppCompatActivity {
     private EditText textNoteTitle;
     private EditText textNoteText;
     private Spinner spinnerCourses;
+    private boolean isCancelling;
+    private int notePostion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class NoteActivity extends AppCompatActivity {
 
     private void createNewNote() {
         DataManager dm = DataManager.getInstance();
-        int notePostion = dm.createNewNote();
+        notePostion = dm.createNewNote();
         note = DataManager.getInstance().getNotes().get(notePostion);
     }
 
@@ -84,6 +86,9 @@ public class NoteActivity extends AppCompatActivity {
         if (id == R.id.action_share_email) {
             sendEmail();
             return true;
+        } else if (id == R.id.action_cancel) {
+            isCancelling = true;
+            finish();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -105,7 +110,13 @@ public class NoteActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        saveNote();
+        if (isCancelling) {
+            if (isNewNote) {
+                DataManager.getInstance().removeNote(notePostion);
+            }
+        } else {
+            saveNote();
+        }
     }
 
     private void saveNote() {

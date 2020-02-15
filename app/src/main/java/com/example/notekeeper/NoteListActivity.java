@@ -37,7 +37,7 @@ public class NoteListActivity extends AppCompatActivity {
     }
 
     private void initializeDisplayContent() {
-        ListView notesList = findViewById(R.id.list_notes);
+        final ListView notesList = findViewById(R.id.list_notes); // make it accessible in annonymous class
 
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
 
@@ -49,6 +49,8 @@ public class NoteListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(NoteListActivity.this, NoteActivity.class);
+                NoteInfo note = (NoteInfo) notesList.getItemAtPosition(position);
+                intent.putExtra(NoteActivity.NOTE_INFO, note);
                 startActivity(intent);
             }
         });

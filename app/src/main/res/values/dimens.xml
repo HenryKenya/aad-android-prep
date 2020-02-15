@@ -3,4 +3,5 @@
     <dimen name="dimen_small_margin">8dp</dimen>
     <dimen name="dimen_large_margin">54dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="dimen_medium_margin">16dp</dimen>
 </resources>

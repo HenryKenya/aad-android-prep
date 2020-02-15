@@ -8,7 +8,7 @@
     <Spinner
         android:id="@+id/spinner_courses"
         android:layout_width="match_parent"
-        android:layout_marginTop="@dimen/dimen_large_margin"
+        android:layout_marginTop="@dimen/dimen_medium_margin"
         android:layout_height="wrap_content" />
 
     <EditText

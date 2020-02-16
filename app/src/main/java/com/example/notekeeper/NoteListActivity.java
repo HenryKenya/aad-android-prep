@@ -37,7 +37,7 @@ public class NoteListActivity extends AppCompatActivity {
     }
 
     private void initializeDisplayContent() {
-        final ListView notesList = findViewById(R.id.list_notes); // make it accessible in annonymous class
+        final ListView notesList = findViewById(R.id.list_notes); // make it accessible in anonymous class
 
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
 

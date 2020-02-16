@@ -11,6 +11,7 @@ import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.List;
 
@@ -25,14 +26,16 @@ public class NoteActivity extends AppCompatActivity {
     private Spinner spinnerCourses;
     private boolean isCancelling;
     private int notePostion;
-    private String originalNoteCourseID;
-    private String originalNoteTitle;
-    private String originalNoteText;
+    private NoteActivityViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
+
+        ViewModelProvider viewModelProvider =
+                new ViewModelProvider(getViewModelStore(), ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()));
+        viewModel = viewModelProvider.get(NoteActivityViewModel.class);
 
         spinnerCourses = findViewById(R.id.spinner_courses);
 
@@ -72,9 +75,9 @@ public class NoteActivity extends AppCompatActivity {
         if (isNewNote) {
             return;
         }
-        originalNoteCourseID = note.getCourse().getCourseId();
-        originalNoteTitle = note.getTitle();
-        originalNoteText = note.getText();
+        viewModel.originalNoteCourseID = note.getCourse().getCourseId();
+        viewModel.originalNoteTitle = note.getTitle();
+        viewModel.originalNoteText = note.getText();
     }
 
     private void readDisplayStateValues() {
@@ -136,10 +139,10 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     private void storePreviousNoteValues() {
-        CourseInfo course = DataManager.getInstance().getCourse(originalNoteCourseID);
+        CourseInfo course = DataManager.getInstance().getCourse(viewModel.originalNoteCourseID);
         note.setCourse(course);
-        note.setTitle(originalNoteTitle);
-        note.setText(originalNoteText);
+        note.setTitle(viewModel.originalNoteTitle);
+        note.setText(viewModel.originalNoteText);
     }
 
     private void saveNote() {

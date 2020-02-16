@@ -37,6 +37,12 @@ public class NoteActivity extends AppCompatActivity {
                 new ViewModelProvider(getViewModelStore(), ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()));
         viewModel = viewModelProvider.get(NoteActivityViewModel.class);
 
+        if (viewModel.isNewlyCreated && savedInstanceState != null) {
+            viewModel.restoreState(savedInstanceState);
+        }
+
+        viewModel.isNewlyCreated = false;
+
         spinnerCourses = findViewById(R.id.spinner_courses);
 
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
@@ -135,6 +141,14 @@ public class NoteActivity extends AppCompatActivity {
             }
         } else {
             saveNote();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (outState != null) {
+            viewModel.saveState(outState);
         }
     }
 

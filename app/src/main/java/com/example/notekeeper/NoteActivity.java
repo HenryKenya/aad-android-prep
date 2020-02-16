@@ -25,6 +25,9 @@ public class NoteActivity extends AppCompatActivity {
     private Spinner spinnerCourses;
     private boolean isCancelling;
     private int notePostion;
+    private String originalNoteCourseID;
+    private String originalNoteTitle;
+    private String originalNoteText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +42,7 @@ public class NoteActivity extends AppCompatActivity {
         spinnerCourses.setAdapter(adapterCourses);
 
         readDisplayStateValues();
+        saveOriginalNoteValues();
 
         textNoteTitle = findViewById(R.id.edit_note_title);
         textNoteText = findViewById(R.id.edit_note_text);
@@ -64,6 +68,15 @@ public class NoteActivity extends AppCompatActivity {
         textNoteText.setText(note.getText());
     }
 
+    private void saveOriginalNoteValues() {
+        if (isNewNote) {
+            return;
+        }
+        originalNoteCourseID = note.getCourse().getCourseId();
+        originalNoteTitle = note.getTitle();
+        originalNoteText = note.getText();
+    }
+
     private void readDisplayStateValues() {
         Intent intent = getIntent();
         int position = intent.getIntExtra(NOTE_POSITION, POSITION_NOT_SET);
@@ -72,6 +85,7 @@ public class NoteActivity extends AppCompatActivity {
             note = DataManager.getInstance().getNotes().get(position);
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -113,10 +127,19 @@ public class NoteActivity extends AppCompatActivity {
         if (isCancelling) {
             if (isNewNote) {
                 DataManager.getInstance().removeNote(notePostion);
+            } else {
+                storePreviousNoteValues();
             }
         } else {
             saveNote();
         }
+    }
+
+    private void storePreviousNoteValues() {
+        CourseInfo course = DataManager.getInstance().getCourse(originalNoteCourseID);
+        note.setCourse(course);
+        note.setTitle(originalNoteTitle);
+        note.setText(originalNoteText);
     }
 
     private void saveNote() {

@@ -6,12 +6,12 @@
         android:id="@+id/action_cancel"
         android:icon="@drawable/ic_undo"
         android:title="@string/cancel"
-        app:showAsAction="never|ifRoom" />
+        app:showAsAction="never|ifRoom|withText" />
     <item
         android:id="@+id/action_next"
         android:icon="@android:drawable/ic_media_next"
         android:title="Next"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="ifRoom|withText" />
     <item
         android:id="@+id/action_share_email"
         android:title="@string/share_as_email"

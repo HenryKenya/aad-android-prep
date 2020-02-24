@@ -120,12 +120,22 @@ public class NoteActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem nextItem = menu.findItem(R.id.action_next);
+        int lastNoteIndex = DataManager.getInstance().getNotes().size() - 1;
+        nextItem.setEnabled(notePostion < lastNoteIndex);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+
     private void moveNext() {
         saveNote(); // first save the note they are moving from
         ++notePostion;
         note = DataManager.getInstance().getNotes().get(notePostion);
         saveOriginalNoteValues(); // save original value of next note in case they opt to cancel
         displayNote(spinnerCourses, textNoteTitle, textNoteText);
+        invalidateOptionsMenu();
     }
 
     private void sendEmail() {

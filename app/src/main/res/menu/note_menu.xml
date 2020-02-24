@@ -4,11 +4,14 @@
 
     <item
         android:id="@+id/action_cancel"
+        android:icon="@drawable/ic_undo"
         android:title="@string/cancel"
-        app:showAsAction="never" />
+        app:showAsAction="never|ifRoom" />
     <item
         android:id="@+id/action_next"
-        android:title="Next" />
+        android:icon="@android:drawable/ic_media_next"
+        android:title="Next"
+        app:showAsAction="ifRoom" />
     <item
         android:id="@+id/action_share_email"
         android:title="@string/share_as_email"

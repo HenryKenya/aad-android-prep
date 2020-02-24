@@ -114,8 +114,18 @@ public class NoteActivity extends AppCompatActivity {
         } else if (id == R.id.action_cancel) {
             isCancelling = true;
             finish();
+        } else if (id == R.id.action_next) {
+            moveNext();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void moveNext() {
+        saveNote(); // first save the note they are moving from
+        ++notePostion;
+        note = DataManager.getInstance().getNotes().get(notePostion);
+        saveOriginalNoteValues(); // save original value of next note in case they opt to cancel
+        displayNote(spinnerCourses, textNoteTitle, textNoteText);
     }
 
     private void sendEmail() {

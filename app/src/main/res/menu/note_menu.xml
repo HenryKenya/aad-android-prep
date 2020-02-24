@@ -7,6 +7,9 @@
         android:title="@string/cancel"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_next"
+        android:title="Next" />
+    <item
         android:id="@+id/action_share_email"
         android:title="@string/share_as_email"
         app:showAsAction="never" />

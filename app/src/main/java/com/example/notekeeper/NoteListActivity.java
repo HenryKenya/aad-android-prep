@@ -69,6 +69,6 @@ public class NoteListActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         //adapterNotes.notifyDataSetChanged();
-        adapter.notifyDataSetChanged(); 
+        adapter.notifyDataSetChanged();
     }
 }

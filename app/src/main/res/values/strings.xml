@@ -6,4 +6,6 @@
     <string name="edit_note">Edit Note</string>
     <string name="share_as_email">Share as email</string>
     <string name="cancel">Cancel</string>
+    <string name="drawer_open">Open</string>
+    <string name="drawer_close">Close</string>
 </resources>

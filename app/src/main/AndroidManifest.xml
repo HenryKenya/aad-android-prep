@@ -21,8 +21,7 @@
         </activity>
         <activity
             android:name=".NoteActivity"
-            android:label="@string/edit_note">
-        </activity>
+            android:label="@string/edit_note"></activity>
     </application>
 
 </manifest>

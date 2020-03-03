@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,6 +30,8 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
     ActionBarDrawerToggle actionBarDrawerToggle;
     private RecyclerView recyclerItems;
     private LinearLayoutManager notesLayoutManager;
+    private CourseRecyclerAdapter courseAdapter;
+    private GridLayoutManager coursesLayoutManager;
 
     // private ArrayAdapter<NoteInfo> adapterNotes;
 
@@ -81,10 +84,13 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
 //        });
         recyclerItems = findViewById(R.id.list_notes);
         notesLayoutManager = new LinearLayoutManager(this);
+        coursesLayoutManager = new GridLayoutManager(this, 2);
 
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
-
         notesAdapter = new NoteRecyclerAdapter(this, notes);
+
+        List<CourseInfo> courses = DataManager.getInstance().getCourses();
+        courseAdapter = new CourseRecyclerAdapter(this, courses);
 
         displayNotes();
     }
@@ -93,8 +99,19 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
         recyclerItems.setLayoutManager(notesLayoutManager);
         recyclerItems.setAdapter(notesAdapter);
 
+        selectNavigationMenuItem(R.id.nav_notes);
+    }
+
+    private void selectNavigationMenuItem(int id) {
         Menu menu = navigationView.getMenu();
-        menu.findItem(R.id.nav_notes).setChecked(true);
+        menu.findItem(id).setChecked(true);
+    }
+
+    private void displayCourses() {
+        recyclerItems.setLayoutManager(coursesLayoutManager);
+        recyclerItems.setAdapter(courseAdapter);
+
+        selectNavigationMenuItem(R.id.nav_courses);
     }
 
     @Override
@@ -110,7 +127,7 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
         if (id == R.id.nav_notes) {
             displayNotes();
         } else if (id == R.id.nav_courses) {
-            handleSelection("Courses");
+            displayCourses();
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);

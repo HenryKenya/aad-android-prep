@@ -84,7 +84,7 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
 //        });
         recyclerItems = findViewById(R.id.list_notes);
         notesLayoutManager = new LinearLayoutManager(this);
-        coursesLayoutManager = new GridLayoutManager(this, 2);
+        coursesLayoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.course_grid_span));
 
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
         notesAdapter = new NoteRecyclerAdapter(this, notes);

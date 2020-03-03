@@ -17,7 +17,7 @@
         android:layout_marginTop="@dimen/dimen_small_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/enter_title" />
+        android:hint="@string/note_title_hint" />
 
     <EditText
         android:id="@+id/edit_note_text"
@@ -25,5 +25,5 @@
         android:layout_marginTop="@dimen/dimen_small_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/enter_text" />
+        android:hint="@string/note_text_hint" />
 </LinearLayout>

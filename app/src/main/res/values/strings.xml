@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Note Keeper</string>
-    <string name="enter_text">Note text</string>
-    <string name="enter_title">Note title</string>
+    <string name="note_text_hint">Note text</string>
+    <string name="note_title_hint">Note title</string>
     <string name="title_activity_note_list">NoteListActivity</string>
     <string name="edit_note">Edit Note</string>
     <string name="share_as_email">Share as email</string>

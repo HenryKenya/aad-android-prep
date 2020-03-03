@@ -2,6 +2,7 @@ package com.example.notekeeper;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -91,6 +92,9 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
     private void displayNotes() {
         recyclerItems.setLayoutManager(notesLayoutManager);
         recyclerItems.setAdapter(notesAdapter);
+
+        Menu menu = navigationView.getMenu();
+        menu.findItem(R.id.nav_notes).setChecked(true);
     }
 
     @Override

@@ -21,11 +21,13 @@ import com.google.android.material.snackbar.Snackbar;
 import java.util.List;
 
 public class NoteListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private NoteRecyclerAdapter adapter;
+    private NoteRecyclerAdapter notesAdapter;
     DrawerLayout drawerLayout;
     Toolbar toolbar;
     NavigationView navigationView;
     ActionBarDrawerToggle actionBarDrawerToggle;
+    private RecyclerView recyclerItems;
+    private LinearLayoutManager notesLayoutManager;
 
     // private ArrayAdapter<NoteInfo> adapterNotes;
 
@@ -76,29 +78,33 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
 //                startActivity(intent);
 //            }
 //        });
-        final RecyclerView recyclerNotes = findViewById(R.id.list_notes);
-        LinearLayoutManager notesLayoutManager = new LinearLayoutManager(this);
-        recyclerNotes.setLayoutManager(notesLayoutManager);
+        recyclerItems = findViewById(R.id.list_notes);
+        notesLayoutManager = new LinearLayoutManager(this);
 
         List<NoteInfo> notes = DataManager.getInstance().getNotes();
 
-        adapter = new NoteRecyclerAdapter(this, notes);
+        notesAdapter = new NoteRecyclerAdapter(this, notes);
 
-        recyclerNotes.setAdapter(adapter);
+        displayNotes();
+    }
+
+    private void displayNotes() {
+        recyclerItems.setLayoutManager(notesLayoutManager);
+        recyclerItems.setAdapter(notesAdapter);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         //adapterNotes.notifyDataSetChanged();
-        adapter.notifyDataSetChanged();
+        notesAdapter.notifyDataSetChanged();
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.nav_notes) {
-            handleSelection("Notes");
+            displayNotes();
         } else if (id == R.id.nav_courses) {
             handleSelection("Courses");
         }

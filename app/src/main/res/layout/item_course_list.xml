@@ -23,7 +23,7 @@
                 android:layout_height="wrap_content"
                 android:text="TextView"
                 android:textAlignment="center"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                android:textAppearance="@style/courseTitle"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

@@ -14,6 +14,7 @@
         android:layout_height="match_parent">
 
         <include layout="@layout/app_bar" />
+
         <include layout="@layout/content_note_list" />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -22,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
-            app:srcCompat="@android:drawable/ic_dialog_email" />
+            style="@style/AddFab" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
     <com.google.android.material.navigation.NavigationView

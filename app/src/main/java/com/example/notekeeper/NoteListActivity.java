@@ -1,11 +1,13 @@
 package com.example.notekeeper;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -123,6 +125,20 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
         super.onResume();
         //adapterNotes.notifyDataSetChanged();
         notesAdapter.notifyDataSetChanged();
+        updateNavHeader();
+    }
+
+    private void updateNavHeader() {
+        View headerView = navigationView.getHeaderView(0);
+        TextView textUsername = headerView.findViewById(R.id.text_user_name);
+        TextView textEmailAddress = headerView.findViewById(R.id.text_user_email);
+
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+        String username = pref.getString("user_display_name", "");
+        String email = pref.getString("user_email", "");
+
+        textUsername.setText(username);
+        textEmailAddress.setText(email);
     }
 
     @Override

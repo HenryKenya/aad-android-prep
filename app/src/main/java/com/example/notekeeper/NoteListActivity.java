@@ -160,7 +160,8 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.action_settings) {
-
+            startActivity(new Intent(this, SettingsActivity.class));
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }

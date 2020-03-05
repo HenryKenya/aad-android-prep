@@ -19,15 +19,22 @@
     <PreferenceCategory app:title="@string/messages_header">
 
         <EditTextPreference
-            app:key="signature"
+            app:key="user_display_name"
             app:title="@string/signature_title"
+            app:defaultValue="John Doe"
+            app:useSimpleSummaryProvider="true" />
+
+        <EditTextPreference
+            app:key="user_email"
+            app:title="@string/email_title"
+            app:defaultValue="johndoe@gmail.com"
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
+            app:defaultValue="facebook"
+            app:entries="@array/social_network_entries"
+            app:entryValues="@array/social_network_values"
+            app:key="user_fav_social"
             app:title="@string/reply_title"
             app:useSimpleSummaryProvider="true" />
 

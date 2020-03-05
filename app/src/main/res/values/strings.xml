@@ -11,12 +11,15 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
+    <string name="messages_header">General</string>
     <string name="sync_header">Sync</string>
 
     <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
+    <string name="signature_title">Display name</string>
+    <string name="reply_title">Favourite social network</string>
+    <string name="email_title">Email address</string>
+
+    <style name="email_default_value">test@gmail.com</style>
 
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
@@ -24,4 +27,5 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+
 </resources>

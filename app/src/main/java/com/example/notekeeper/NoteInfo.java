@@ -7,17 +7,26 @@ public final class NoteInfo implements Parcelable {
     private CourseInfo mCourse;
     private String mTitle;
     private String mText;
+    private int mId;
 
     public NoteInfo(CourseInfo course, String title, String text) {
         mCourse = course;
         mTitle = title;
         mText = text;
+
     }
 
     private NoteInfo(Parcel parcel) {
         mCourse = parcel.readParcelable(CourseInfo.class.getClassLoader()); // must provide class loader to readParcelable
         mTitle = parcel.readString();
         mText = parcel.readString();
+    }
+
+    public NoteInfo(int id, CourseInfo noteCourse, String noteTitle, String noteText) {
+        mId = id;
+        mCourse = noteCourse;
+        mTitle = noteTitle;
+        mText = noteText;
     }
 
     public CourseInfo getCourse() {

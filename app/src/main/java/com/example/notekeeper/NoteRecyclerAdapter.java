@@ -17,7 +17,7 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
 
     private final Context context;
     //private final List<NoteInfo> notes;
-    private Cursor cursor;
+    private Cursor mCursor;
     private final LayoutInflater inflater;
     private int coursePos;
     private int noteTitlePos;
@@ -25,23 +25,23 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
 
     public NoteRecyclerAdapter(Context context, Cursor cursor) {
         this.context = context;
-        this.cursor = cursor;
+        this.mCursor = cursor;
         inflater = LayoutInflater.from(this.context);
         populateColumnPositions();
     }
 
     private void populateColumnPositions() {
-        if (cursor == null)
+        if (mCursor == null)
             return;
-        coursePos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
-        noteTitlePos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
-        idPos = cursor.getColumnIndex(NoteInfoEntry._ID);
+        coursePos = mCursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
+        noteTitlePos = mCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
+        idPos = mCursor.getColumnIndex(NoteInfoEntry._ID);
     }
 
-    private void changeCursor(Cursor cursor) {
-        if (cursor != null)
-            cursor.close();
-        this.cursor = cursor;
+    public void changeCursor(Cursor cursor) {
+        if (mCursor != null)
+            mCursor.close();
+        this.mCursor = cursor;
         populateColumnPositions();
         notifyDataSetChanged();
     }
@@ -57,10 +57,10 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        cursor.moveToPosition(position); // move cursor to correct position
-        String course = cursor.getString(coursePos);
-        String noteTitle = cursor.getString(noteTitlePos);
-        int id = cursor.getInt(idPos);
+        mCursor.moveToPosition(position); // move mCursor to correct position
+        String course = mCursor.getString(coursePos);
+        String noteTitle = mCursor.getString(noteTitlePos);
+        int id = mCursor.getInt(idPos);
 
         //NoteInfo note = notes.get(position);
         holder.textCourse.setText(course);
@@ -70,7 +70,7 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
 
     @Override
     public int getItemCount() {
-        return cursor == null ? 0 : cursor.getCount();
+        return mCursor == null ? 0 : mCursor.getCount();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

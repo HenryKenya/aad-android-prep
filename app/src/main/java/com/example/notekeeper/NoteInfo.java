@@ -29,6 +29,10 @@ public final class NoteInfo implements Parcelable {
         mText = noteText;
     }
 
+    public int getId() {
+        return mId;
+    }
+
     public CourseInfo getCourse() {
         return mCourse;
     }

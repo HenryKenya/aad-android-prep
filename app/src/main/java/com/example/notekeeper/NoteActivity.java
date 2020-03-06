@@ -23,15 +23,15 @@ import java.util.List;
 public class NoteActivity extends AppCompatActivity {
 
     public final String TAG = getClass().getSimpleName();
-    public static final String NOTE_POSITION = "com.example.notekeeper.NOTE_POSITION";
-    public static final int POSITION_NOT_SET = -1;
+    public static final String NOTE_ID = "com.example.notekeeper.NOTE_ID";
+    public static final int ID_NOT_SET = -1;
     private NoteInfo note;
     private boolean isNewNote;
     private EditText textNoteTitle;
     private EditText textNoteText;
     private Spinner spinnerCourses;
     private boolean isCancelling;
-    private int notePostion;
+    private int noteId;
     private NoteActivityViewModel viewModel;
     private NoteKeeperOpenHelper dbHelper;
     private Cursor noteCursor;
@@ -82,8 +82,8 @@ public class NoteActivity extends AppCompatActivity {
         String courseId = "android_intents";
         String titleStart = "dynamic";
 
-        String selection = NoteInfoEntry.COLUMN_COURSE_ID + " = ? AND " + NoteInfoEntry.COLUMN_NOTE_TITLE + " LIKE ?";
-        String[] selectionArgs = {courseId, titleStart + "%"};
+        String selection = NoteInfoEntry._ID + " = ?";
+        String[] selectionArgs = {Integer.toString(noteId)};
 
         final String[] noteColumns = {
                 NoteInfoEntry.COLUMN_NOTE_TITLE,
@@ -125,19 +125,19 @@ public class NoteActivity extends AppCompatActivity {
 
     private void readDisplayStateValues() {
         Intent intent = getIntent();
-        notePostion = intent.getIntExtra(NOTE_POSITION, POSITION_NOT_SET);
-        isNewNote = notePostion == POSITION_NOT_SET;
+        noteId = intent.getIntExtra(NOTE_ID, ID_NOT_SET);
+        isNewNote = noteId == ID_NOT_SET;
         if (isNewNote) {
             createNewNote();
         }
-        Log.i(TAG, "note position: " + notePostion);
-        note = DataManager.getInstance().getNotes().get(notePostion);
+        Log.i(TAG, "note position: " + noteId);
+        // note = DataManager.getInstance().getNotes().get(noteId);
     }
 
     private void createNewNote() {
         DataManager dm = DataManager.getInstance();
-        notePostion = dm.createNewNote();
-        //note = DataManager.getInstance().getNotes().get(notePostion);
+        noteId = dm.createNewNote();
+        //note = DataManager.getInstance().getNotes().get(noteId);
     }
 
     @Override
@@ -172,15 +172,15 @@ public class NoteActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
         MenuItem nextItem = menu.findItem(R.id.action_next);
         int lastNoteIndex = DataManager.getInstance().getNotes().size() - 1;
-        nextItem.setEnabled(notePostion < lastNoteIndex);
+        nextItem.setEnabled(noteId < lastNoteIndex);
         return super.onPrepareOptionsMenu(menu);
     }
 
 
     private void moveNext() {
         saveNote(); // first save the note they are moving from
-        ++notePostion;
-        note = DataManager.getInstance().getNotes().get(notePostion);
+        ++noteId;
+        note = DataManager.getInstance().getNotes().get(noteId);
         saveOriginalNoteValues(); // save original value of next note in case they opt to cancel
         displayNote();
         invalidateOptionsMenu();
@@ -204,9 +204,9 @@ public class NoteActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         if (isCancelling) {
-            Log.i(TAG, "cancelling note at position: " + notePostion);
+            Log.i(TAG, "cancelling note at position: " + noteId);
             if (isNewNote) {
-                DataManager.getInstance().removeNote(notePostion);
+                DataManager.getInstance().removeNote(noteId);
             } else {
                 storePreviousNoteValues();
             }

@@ -36,6 +36,7 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
     private LinearLayoutManager notesLayoutManager;
     private CourseRecyclerAdapter courseAdapter;
     private GridLayoutManager coursesLayoutManager;
+    private NoteKeeperOpenHelper mdbOpenHelper;
 
     // private ArrayAdapter<NoteInfo> adapterNotes;
 
@@ -56,6 +57,8 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
         actionBarDrawerToggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
+
+        mdbOpenHelper = new NoteKeeperOpenHelper(this);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -118,6 +121,12 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
         recyclerItems.setAdapter(courseAdapter);
 
         selectNavigationMenuItem(R.id.nav_courses);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mdbOpenHelper.close();
+        super.onDestroy();
     }
 
     @Override

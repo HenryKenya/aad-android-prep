@@ -91,6 +91,8 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
 //                startActivity(intent);
 //            }
 //        });
+        DataManager.loadFromDatabase(mdbOpenHelper);
+
         recyclerItems = findViewById(R.id.list_notes);
         notesLayoutManager = new LinearLayoutManager(this);
         coursesLayoutManager = new GridLayoutManager(this, getResources().getInteger(R.integer.course_grid_span));

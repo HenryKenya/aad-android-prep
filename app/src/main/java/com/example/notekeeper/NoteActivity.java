@@ -25,7 +25,7 @@ public class NoteActivity extends AppCompatActivity {
     public final String TAG = getClass().getSimpleName();
     public static final String NOTE_ID = "com.example.notekeeper.NOTE_ID";
     public static final int ID_NOT_SET = -1;
-    private NoteInfo note;
+    private NoteInfo note = new NoteInfo(DataManager.getInstance().getCourses().get(0), "", "");
     private boolean isNewNote;
     private EditText textNoteTitle;
     private EditText textNoteText;
@@ -78,9 +78,6 @@ public class NoteActivity extends AppCompatActivity {
 
     private void loadNoteData() {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        String courseId = "android_intents";
-        String titleStart = "dynamic";
 
         String selection = NoteInfoEntry._ID + " = ?";
         String[] selectionArgs = {Integer.toString(noteId)};

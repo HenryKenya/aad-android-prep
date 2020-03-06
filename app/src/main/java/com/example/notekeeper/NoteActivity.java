@@ -19,8 +19,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.notekeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.example.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 
-import java.util.List;
-
 public class NoteActivity extends AppCompatActivity {
 
     public final String TAG = getClass().getSimpleName();
@@ -119,12 +117,30 @@ public class NoteActivity extends AppCompatActivity {
         String noteTitle = noteCursor.getString(noteTitlePos);
         String noteText = noteCursor.getString(noteTextPos);
 
-        List<CourseInfo> courses = DataManager.getInstance().getCourses();
-        CourseInfo course = DataManager.getInstance().getCourse(courseId);
-        int courseIndex = courses.indexOf(course);
+//        List<CourseInfo> courses = DataManager.getInstance().getCourses();
+//        CourseInfo course = DataManager.getInstance().getCourse(courseId);
+
+        int courseIndex = getIndexOfCourseId(courseId);
         spinnerCourses.setSelection(courseIndex);
         textNoteTitle.setText(noteTitle);
         textNoteText.setText(noteText);
+    }
+
+    private int getIndexOfCourseId(String courseId) {
+        Cursor cursor = adapterCourses.getCursor();
+        int courseIndexPos = cursor.getColumnIndex(CourseInfoEntry.COLUMN_COURSE_ID);
+        int courseRowIndex = 0;
+
+        boolean more = cursor.moveToFirst();
+
+        while (more) {
+            String cursorCourseIndex = cursor.getString(courseIndexPos);
+            if (courseId.equals(cursorCourseIndex))
+                break;
+            courseRowIndex++;
+            more = cursor.moveToNext();
+        }
+        return courseRowIndex;
     }
 
     private void saveOriginalNoteValues() {

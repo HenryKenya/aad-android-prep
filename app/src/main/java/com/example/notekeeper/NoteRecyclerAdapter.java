@@ -2,6 +2,7 @@ package com.example.notekeeper;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,19 +11,41 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
+import com.example.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 
 public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapter.ViewHolder> {
 
     private final Context context;
-    private final List<NoteInfo> notes;
+    //private final List<NoteInfo> notes;
+    private Cursor cursor;
     private final LayoutInflater inflater;
+    private int coursePos;
+    private int noteTitlePos;
+    private int idPos;
 
-    public NoteRecyclerAdapter(Context context, List<NoteInfo> notes) {
+    public NoteRecyclerAdapter(Context context, Cursor cursor) {
         this.context = context;
-        this.notes = notes;
+        this.cursor = cursor;
         inflater = LayoutInflater.from(this.context);
+        populateColumnPositions();
     }
+
+    private void populateColumnPositions() {
+        if (cursor == null)
+            return;
+        coursePos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
+        noteTitlePos = cursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
+        idPos = cursor.getColumnIndex(NoteInfoEntry._ID);
+    }
+
+    private void changeCursor(Cursor cursor) {
+        if (cursor != null)
+            cursor.close();
+        this.cursor = cursor;
+        populateColumnPositions();
+        notifyDataSetChanged();
+    }
+
 
     @NonNull
     @Override
@@ -33,15 +56,21 @@ public class NoteRecyclerAdapter extends RecyclerView.Adapter<NoteRecyclerAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        NoteInfo note = notes.get(position);
-        holder.textCourse.setText(note.getCourse().getTitle());
-        holder.textTitle.setText(note.getTitle());
-        holder.id = note.getId();
+
+        cursor.moveToPosition(position); // move cursor to correct position
+        String course = cursor.getString(coursePos);
+        String noteTitle = cursor.getString(noteTitlePos);
+        int id = cursor.getInt(idPos);
+
+        //NoteInfo note = notes.get(position);
+        holder.textCourse.setText(course);
+        holder.textTitle.setText(noteTitle);
+        holder.id = id;
     }
 
     @Override
     public int getItemCount() {
-        return notes.size();
+        return cursor == null ? 0 : cursor.getCount();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

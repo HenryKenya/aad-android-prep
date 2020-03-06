@@ -1,6 +1,8 @@
 package com.example.notekeeper;
 
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -13,6 +15,8 @@ import android.widget.Spinner;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
+
+import com.example.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 
 import java.util.List;
 
@@ -29,11 +33,18 @@ public class NoteActivity extends AppCompatActivity {
     private boolean isCancelling;
     private int notePostion;
     private NoteActivityViewModel viewModel;
+    private NoteKeeperOpenHelper dbHelper;
+    private Cursor noteCursor;
+    private int courseIDPos;
+    private int noteTitlePos;
+    private int noteTextPos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note);
+
+        dbHelper = new NoteKeeperOpenHelper(this);
 
         ViewModelProvider viewModelProvider =
                 new ViewModelProvider(getViewModelStore(), ViewModelProvider.AndroidViewModelFactory.getInstance(getApplication()));
@@ -58,17 +69,49 @@ public class NoteActivity extends AppCompatActivity {
         textNoteTitle = findViewById(R.id.edit_note_title);
         textNoteText = findViewById(R.id.edit_note_text);
 
-        displayNote(spinnerCourses, textNoteTitle, textNoteText);
+        if (!isNewNote)
+            //displayNote();
+            loadNoteData();
 
         Log.d(TAG, "onCreate");
     }
 
-    private void displayNote(Spinner spinnerCourses, EditText textNoteTitle, EditText textNoteText) {
+    private void loadNoteData() {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+
+        String courseId = "android_intents";
+        String titleStart = "dynamic";
+
+        String selection = NoteInfoEntry.COLUMN_COURSE_ID + " = ? AND " + NoteInfoEntry.COLUMN_NOTE_TITLE + " LIKE ?";
+        String[] selectionArgs = {courseId, titleStart + "%"};
+
+        final String[] noteColumns = {
+                NoteInfoEntry.COLUMN_NOTE_TITLE,
+                NoteInfoEntry.COLUMN_NOTE_TEXT,
+                NoteInfoEntry.COLUMN_COURSE_ID,
+                NoteInfoEntry._ID};
+
+        noteCursor = db.query(NoteInfoEntry.TABLE_NAME, noteColumns, selection, selectionArgs, null, null, null);
+        courseIDPos = noteCursor.getColumnIndex(NoteInfoEntry.COLUMN_COURSE_ID);
+        noteTitlePos = noteCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TITLE);
+        noteTextPos = noteCursor.getColumnIndex(NoteInfoEntry.COLUMN_NOTE_TEXT);
+
+        noteCursor.moveToNext();
+        displayNote();
+    }
+
+    private void displayNote() {
+
+        String courseId = noteCursor.getString(courseIDPos);
+        String noteTitle = noteCursor.getString(noteTitlePos);
+        String noteText = noteCursor.getString(noteTextPos);
+
         List<CourseInfo> courses = DataManager.getInstance().getCourses();
-        int courseIndex = courses.indexOf(note.getCourse());
+        CourseInfo course = DataManager.getInstance().getCourse(courseId);
+        int courseIndex = courses.indexOf(course);
         spinnerCourses.setSelection(courseIndex);
-        textNoteTitle.setText(note.getTitle());
-        textNoteText.setText(note.getText());
+        textNoteTitle.setText(noteTitle);
+        textNoteText.setText(noteText);
     }
 
     private void saveOriginalNoteValues() {
@@ -97,6 +140,11 @@ public class NoteActivity extends AppCompatActivity {
         //note = DataManager.getInstance().getNotes().get(notePostion);
     }
 
+    @Override
+    protected void onDestroy() {
+        dbHelper.close();
+        super.onDestroy();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -134,7 +182,7 @@ public class NoteActivity extends AppCompatActivity {
         ++notePostion;
         note = DataManager.getInstance().getNotes().get(notePostion);
         saveOriginalNoteValues(); // save original value of next note in case they opt to cancel
-        displayNote(spinnerCourses, textNoteTitle, textNoteText);
+        displayNote();
         invalidateOptionsMenu();
     }
 

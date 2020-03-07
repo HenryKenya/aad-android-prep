@@ -26,6 +26,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.notekeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.example.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -237,7 +238,12 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
                         NoteInfoEntry.COLUMN_COURSE_ID,
                         NoteInfoEntry._ID};
                 String noteOrderBy = NoteInfoEntry.COLUMN_COURSE_ID + "," + NoteInfoEntry.COLUMN_NOTE_TITLE;
-                return db.query(NoteInfoEntry.TABLE_NAME, noteColumns,
+
+                String tablesWithJoin = NoteInfoEntry.TABLE_NAME + " JOIN " + CourseInfoEntry.TABLE_NAME + " ON "
+                        + NoteInfoEntry.TABLE_NAME + " . " + NoteInfoEntry.COLUMN_COURSE_ID + " = "
+                        + CourseInfoEntry.TABLE_NAME + " . " + CourseInfoEntry.COLUMN_COURSE_ID;
+
+                return db.query(tablesWithJoin, noteColumns,
                         null, null, null, null, noteOrderBy);
             }
         };

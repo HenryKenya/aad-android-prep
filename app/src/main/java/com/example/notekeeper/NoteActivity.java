@@ -2,6 +2,7 @@ package com.example.notekeeper;
 
 import android.annotation.SuppressLint;
 import android.app.LoaderManager;
+import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -270,9 +271,33 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void saveNote() {
-        note.setCourse((CourseInfo) spinnerCourses.getSelectedItem());
-        note.setTitle(textNoteTitle.getText().toString());
-        note.setText(textNoteText.getText().toString());
+        String courseId = getSelectedCourseId();
+        String noteTitle = textNoteTitle.getText().toString();
+        String noteText = textNoteText.getText().toString();
+
+        saveNoteToDatabase(courseId, noteTitle, noteText);
+    }
+
+    private String getSelectedCourseId() {
+        int selectedPos = spinnerCourses.getSelectedItemPosition();
+        Cursor cursor = adapterCourses.getCursor();
+        cursor.moveToPosition(selectedPos);
+        int courseIdPos = cursor.getColumnIndex(CourseInfoEntry.COLUMN_COURSE_ID);
+        String courseId = cursor.getString(courseIdPos);
+        return courseId;
+    }
+
+    private void saveNoteToDatabase(String courseId, String noteTitle, String noteText) {
+        String selection = NoteInfoEntry._ID + " = ?";
+        String[] selectionArgs = {Integer.toString(noteId)};
+
+        ContentValues values = new ContentValues();
+        values.put(NoteInfoEntry.COLUMN_COURSE_ID, courseId);
+        values.put(NoteInfoEntry.COLUMN_NOTE_TITLE, noteTitle);
+        values.put(NoteInfoEntry.COLUMN_NOTE_TEXT, noteText);
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.update(NoteInfoEntry.TABLE_NAME, values, selection, selectionArgs);
     }
 
     @Override

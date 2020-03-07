@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -45,8 +46,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     private int noteTitlePos;
     private int noteTextPos;
     private SimpleCursorAdapter adapterCourses;
-    private Boolean courseQueryFinished;
-    private Boolean notesQueryFinished;
+    private boolean courseQueryFinished;
+    private boolean notesQueryFinished;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,9 +175,16 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void createNewNote() {
-        DataManager dm = DataManager.getInstance();
-        noteId = dm.createNewNote();
-        //note = DataManager.getInstance().getNotes().get(noteId);
+        // DataManager dm = DataManager.getInstance();
+        // noteId = dm.createNewNote();
+        // note = DataManager.getInstance().getNotes().get(noteId);
+        ContentValues values = new ContentValues();
+        values.put(NoteInfoEntry.COLUMN_NOTE_TEXT, "");
+        values.put(NoteInfoEntry.COLUMN_NOTE_TITLE, "");
+        values.put(NoteInfoEntry.COLUMN_COURSE_ID, "");
+
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        noteId = (int) db.insert(NoteInfoEntry.TABLE_NAME, null, values);
     }
 
     @Override
@@ -245,7 +253,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         if (isCancelling) {
             Log.i(TAG, "cancelling note at position: " + noteId);
             if (isNewNote) {
-                DataManager.getInstance().removeNote(noteId);
+                //DataManager.getInstance().removeNote(noteId);
+                deleteNoteFromDatabase();
             } else {
                 storePreviousNoteValues();
             }
@@ -253,6 +262,22 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
             saveNote();
         }
         Log.d(TAG, "onPause ");
+    }
+
+    private void deleteNoteFromDatabase() {
+        final String selection = NoteInfoEntry._ID + " = ? ";
+        final String[] selectionArgs = {Integer.toString(noteId)};
+
+        @SuppressLint("StaticFieldLeak") AsyncTask task = new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] objects) {
+                SQLiteDatabase db = dbHelper.getWritableDatabase();
+                db.delete(NoteInfoEntry.TABLE_NAME, selection, selectionArgs);
+                return null;
+            }
+        };
+
+        task.execute();
     }
 
     @Override

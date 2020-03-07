@@ -11,6 +11,11 @@ public final class NoteKeeperDatabaseContract {
         public static final String COLUMN_COURSE_ID = "course_id";
         public static final String COLUMN_COURSE_TITLE = "course_title";
 
+
+        public static final String getQName(String columnName) {
+            return TABLE_NAME + "." + columnName;
+        }
+
         // CREATE TABLE course_info (course_id, course_title)
         public static final String SQL_CREATE_TABLE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
@@ -25,6 +30,10 @@ public final class NoteKeeperDatabaseContract {
         public static final String COLUMN_NOTE_TEXT = "note_text";
         public static final String COLUMN_COURSE_ID = "course_id";
 
+        public static final String getQName(String columnName) {
+            return TABLE_NAME + "." + columnName;
+        }
+
         public static final String SQL_CREATE_TABLE =
                 "CREATE TABLE " + TABLE_NAME + " (" +
                         _ID + " INTEGER PRIMARY KEY, " +
@@ -32,4 +41,5 @@ public final class NoteKeeperDatabaseContract {
                         COLUMN_NOTE_TEXT + " TEXT, " +
                         COLUMN_COURSE_ID + " TEXT NOT NULL)";
     }
+
 }

@@ -235,11 +235,10 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
                 SQLiteDatabase db = mdbOpenHelper.getReadableDatabase();
                 final String[] noteColumns = {
                         NoteInfoEntry.COLUMN_NOTE_TITLE,
-                        NoteInfoEntry.getQName(NoteInfoEntry.COLUMN_COURSE_ID),
                         NoteInfoEntry.getQName(NoteInfoEntry._ID),
                         CourseInfoEntry.COLUMN_COURSE_TITLE
                 };
-                String noteOrderBy = NoteInfoEntry.COLUMN_COURSE_ID + "," + NoteInfoEntry.COLUMN_NOTE_TITLE;
+                String noteOrderBy = CourseInfoEntry.COLUMN_COURSE_TITLE + "," + NoteInfoEntry.COLUMN_NOTE_TITLE;
 
                 String tablesWithJoin = NoteInfoEntry.TABLE_NAME + " JOIN " + CourseInfoEntry.TABLE_NAME + " ON "
                         + NoteInfoEntry.getQName(NoteInfoEntry.COLUMN_COURSE_ID) + " = "

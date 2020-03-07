@@ -1,6 +1,10 @@
 package com.example.notekeeper;
 
+import android.annotation.SuppressLint;
+import android.app.LoaderManager;
+import android.content.CursorLoader;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -29,7 +33,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import java.util.List;
 
-public class NoteListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class NoteListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, LoaderManager.LoaderCallbacks<Cursor> {
+    public static final int LOADER_ALL_NOTES = 0;
     private NoteRecyclerAdapter notesAdapter;
     DrawerLayout drawerLayout;
     Toolbar toolbar;
@@ -137,8 +142,9 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
     @Override
     protected void onResume() {
         super.onResume();
-        //adapterNotes.notifyDataSetChanged();
-        loadNotes();
+        // adapterNotes.notifyDataSetChanged();
+        // loadNotes();
+        getLoaderManager().restartLoader(LOADER_ALL_NOTES, null, this);
         updateNavHeader();
     }
 
@@ -209,5 +215,43 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        CursorLoader loader = null;
+        if (id == LOADER_ALL_NOTES) {
+            loader = createAllNotesLoader();
+        }
+        return loader;
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private CursorLoader createAllNotesLoader() {
+        return new CursorLoader(this) {
+            @Override
+            public Cursor loadInBackground() {
+                SQLiteDatabase db = mdbOpenHelper.getReadableDatabase();
+                final String[] noteColumns = {
+                        NoteInfoEntry.COLUMN_NOTE_TITLE,
+                        NoteInfoEntry.COLUMN_COURSE_ID,
+                        NoteInfoEntry._ID};
+                String noteOrderBy = NoteInfoEntry.COLUMN_COURSE_ID + "," + NoteInfoEntry.COLUMN_NOTE_TITLE;
+                return db.query(NoteInfoEntry.TABLE_NAME, noteColumns,
+                        null, null, null, null, noteOrderBy);
+            }
+        };
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        if (loader.getId() == LOADER_ALL_NOTES)
+            notesAdapter.changeCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        if (loader.getId() == LOADER_ALL_NOTES)
+            notesAdapter.changeCursor(null);
     }
 }

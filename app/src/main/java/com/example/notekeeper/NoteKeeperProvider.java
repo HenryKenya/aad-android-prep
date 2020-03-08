@@ -8,11 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import com.example.notekeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
-import com.example.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
-
-import static com.example.notekeeper.NoteKeeperProviderContract.AUTHORITY;
-import static com.example.notekeeper.NoteKeeperProviderContract.Courses;
-import static com.example.notekeeper.NoteKeeperProviderContract.Notes;
+import com.example.notekeeper.NoteKeeperProviderContract.Courses;
 
 public class NoteKeeperProvider extends ContentProvider {
 
@@ -22,11 +18,9 @@ public class NoteKeeperProvider extends ContentProvider {
 
     public static final int COURSES = 0;
 
-    public static final int NOTES = 1;
-
     static {
-        uriMatcher.addURI(AUTHORITY, Courses.PATH, COURSES);
-        uriMatcher.addURI(AUTHORITY, Notes.PATH, NOTES);
+        uriMatcher.addURI(NoteKeeperProviderContract.AUTHORITY, Courses.PATH, COURSES);
+
     }
 
     public NoteKeeperProvider() {
@@ -60,19 +54,9 @@ public class NoteKeeperProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-        Cursor cursor = null;
+        Cursor cursor;
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        int uriMatch = uriMatcher.match(uri);
-
-        switch (uriMatch) {
-            case COURSES:
-                cursor = db.query(CourseInfoEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
-                break;
-            case NOTES:
-                cursor = db.query(NoteInfoEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
-                break;
-        }
+        cursor = db.query(CourseInfoEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
         return cursor;
     }
 

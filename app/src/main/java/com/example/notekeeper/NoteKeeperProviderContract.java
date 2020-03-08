@@ -7,7 +7,7 @@ public final class NoteKeeperProviderContract {
     private NoteKeeperProviderContract() {
     } // make class not creatable
 
-    public static final String AUTHORITY = "com.example.notekeeper";
+    public static final String AUTHORITY = "com.example.notekeepe.provider";
     public static final Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
 
     protected interface CourseIdColumns {
@@ -25,13 +25,13 @@ public final class NoteKeeperProviderContract {
 
     public static final class Courses implements BaseColumns, CourseColumns, CourseIdColumns {
         public static final String PATH = "courses";
-        public static final Uri CONTENT_PATH = Uri.withAppendedPath(AUTHORITY_URI, PATH);
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, PATH);
 
     }
 
     public static final class Notes implements BaseColumns, NotesColumns, CourseIdColumns {
         public static final String PATH = "notes";
-        public static final Uri CONTENT_PATH = Uri.withAppendedPath(AUTHORITY_URI, PATH);
+        public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, PATH);
 
     }
 }

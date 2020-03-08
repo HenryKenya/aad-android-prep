@@ -6,10 +6,12 @@ import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.provider.BaseColumns;
 
 import com.example.notekeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
 import com.example.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
 import com.example.notekeeper.NoteKeeperProviderContract.Courses;
+import com.example.notekeeper.NoteKeeperProviderContract.CoursesIdColumns;
 import com.example.notekeeper.NoteKeeperProviderContract.Notes;
 
 public class NoteKeeperProvider extends ContentProvider {
@@ -22,12 +24,12 @@ public class NoteKeeperProvider extends ContentProvider {
 
     public static final int NOTES = 1;
 
-    public static final int EXPANDED_PATH = 2;
+    public static final int NOTES_EXPANDED = 2;
 
     static {
         uriMatcher.addURI(NoteKeeperProviderContract.AUTHORITY, Courses.PATH, COURSES);
         uriMatcher.addURI(NoteKeeperProviderContract.AUTHORITY, Notes.PATH, NOTES);
-        uriMatcher.addURI(NoteKeeperProviderContract.AUTHORITY, Notes.EXPANDED_PATH, EXPANDED_PATH);
+        uriMatcher.addURI(NoteKeeperProviderContract.AUTHORITY, Notes.PATH_EXPANDED, NOTES_EXPANDED);
     }
 
     public NoteKeeperProvider() {
@@ -72,17 +74,27 @@ public class NoteKeeperProvider extends ContentProvider {
             case NOTES:
                 cursor = db.query(NoteInfoEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
-            case EXPANDED_PATH:
+            case NOTES_EXPANDED:
                 cursor = notesExpandedQuery(db, projection, selection, selectionArgs, sortOrder);
+                break;
         }
         return cursor;
     }
 
     private Cursor notesExpandedQuery(SQLiteDatabase db, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        String tableJoins = NoteInfoEntry.TABLE_NAME + " JOIN " + CourseInfoEntry.TABLE_NAME + " ON "
+
+        String[] columns = new String[projection.length];
+        for (int idx = 0; idx < projection.length; idx++) {
+            columns[idx] = projection[idx].equals(BaseColumns._ID) ||
+                    projection[idx].equals(CoursesIdColumns.COLUMN_COURSE_ID) ?
+                    NoteInfoEntry.getQName(projection[idx]) : projection[idx];
+        }
+
+        String tableJoins = NoteInfoEntry.TABLE_NAME + " JOIN " +
+                CourseInfoEntry.TABLE_NAME + " ON "
                 + NoteInfoEntry.getQName(NoteInfoEntry.COLUMN_COURSE_ID) + " = "
-                + CourseInfoEntry.getQName(CourseInfoEntry.COLUMN_COURSE_TITLE);
-        return db.query(tableJoins, projection, selection, selectionArgs, null, null, sortOrder);
+                + CourseInfoEntry.getQName(CourseInfoEntry.COLUMN_COURSE_ID);
+        return db.query(tableJoins, columns, selection, selectionArgs, null, null, sortOrder);
     }
 
     @Override

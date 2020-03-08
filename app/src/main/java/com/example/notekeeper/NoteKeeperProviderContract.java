@@ -10,7 +10,7 @@ public final class NoteKeeperProviderContract {
     public static final String AUTHORITY = "com.example.notekeeper.provider";
     public static final Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
 
-    protected interface CourseIdColumns {
+    protected interface CoursesIdColumns {
         String COLUMN_COURSE_ID = "course_id";
     }
 
@@ -23,17 +23,17 @@ public final class NoteKeeperProviderContract {
         String COLUMN_NOTE_TEXT = "note_text";
     }
 
-    public static final class Courses implements BaseColumns, CourseColumns, CourseIdColumns {
+    public static final class Courses implements BaseColumns, CourseColumns, CoursesIdColumns {
         public static final String PATH = "courses";
         public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, PATH);
 
     }
 
-    public static final class Notes implements BaseColumns, NotesColumns, CourseIdColumns, CourseColumns {
+    public static final class Notes implements BaseColumns, NotesColumns, CoursesIdColumns, CourseColumns {
         public static final String PATH = "notes";
         public static final Uri CONTENT_URI = Uri.withAppendedPath(AUTHORITY_URI, PATH);
-        public static final String EXPANDED_PATH = "notes_expanded";
-        public static final Uri CONTENT_EXPANDED_URI = Uri.withAppendedPath(AUTHORITY_URI, EXPANDED_PATH);
+        public static final String PATH_EXPANDED = "notes_expanded";
+        public static final Uri CONTENT_EXPANDED_URI = Uri.withAppendedPath(AUTHORITY_URI, PATH_EXPANDED);
 
     }
 }

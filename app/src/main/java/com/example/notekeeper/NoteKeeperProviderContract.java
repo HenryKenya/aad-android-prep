@@ -7,7 +7,7 @@ public final class NoteKeeperProviderContract {
     private NoteKeeperProviderContract() {
     } // make class not creatable
 
-    public static final String AUTHORITY = "com.example.notekeepe.provider";
+    public static final String AUTHORITY = "com.example.notekeeper.provider";
     public static final Uri AUTHORITY_URI = Uri.parse("content://" + AUTHORITY);
 
     protected interface CourseIdColumns {

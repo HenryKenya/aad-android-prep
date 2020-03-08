@@ -72,8 +72,17 @@ public class NoteKeeperProvider extends ContentProvider {
             case NOTES:
                 cursor = db.query(NoteInfoEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
                 break;
+            case EXPANDED_PATH:
+                cursor = notesExpandedQuery(db, projection, selection, selectionArgs, sortOrder);
         }
         return cursor;
+    }
+
+    private Cursor notesExpandedQuery(SQLiteDatabase db, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+        String tableJoins = NoteInfoEntry.TABLE_NAME + " JOIN " + CourseInfoEntry.TABLE_NAME + " ON "
+                + NoteInfoEntry.getQName(NoteInfoEntry.COLUMN_COURSE_ID) + " = "
+                + CourseInfoEntry.getQName(CourseInfoEntry.COLUMN_COURSE_TITLE);
+        return db.query(tableJoins, projection, selection, selectionArgs, null, null, sortOrder);
     }
 
     @Override

@@ -2,15 +2,32 @@ package com.example.notekeeper;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.UriMatcher;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 
 import com.example.notekeeper.NoteKeeperDatabaseContract.CourseInfoEntry;
+import com.example.notekeeper.NoteKeeperDatabaseContract.NoteInfoEntry;
+
+import static com.example.notekeeper.NoteKeeperProviderContract.AUTHORITY;
+import static com.example.notekeeper.NoteKeeperProviderContract.Courses;
+import static com.example.notekeeper.NoteKeeperProviderContract.Notes;
 
 public class NoteKeeperProvider extends ContentProvider {
 
     NoteKeeperOpenHelper dbHelper;
+
+    private static UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH); // return no match if no authority is provided
+
+    public static final int COURSES = 0;
+
+    public static final int NOTES = 1;
+
+    static {
+        uriMatcher.addURI(AUTHORITY, Courses.PATH, COURSES);
+        uriMatcher.addURI(AUTHORITY, Notes.PATH, NOTES);
+    }
 
     public NoteKeeperProvider() {
     }
@@ -43,9 +60,19 @@ public class NoteKeeperProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
-        Cursor cursor;
+        Cursor cursor = null;
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        cursor = db.query(CourseInfoEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+
+        int uriMatch = uriMatcher.match(uri);
+
+        switch (uriMatch) {
+            case COURSES:
+                cursor = db.query(CourseInfoEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+            case NOTES:
+                cursor = db.query(NoteInfoEntry.TABLE_NAME, projection, selection, selectionArgs, null, null, sortOrder);
+                break;
+        }
         return cursor;
     }
 

@@ -1,6 +1,7 @@
 package com.example.notekeeper;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
@@ -50,8 +51,26 @@ public class NoteKeeperProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        // TODO: Implement this to handle requests to insert a new row.
-        throw new UnsupportedOperationException("Not yet implemented");
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        long rowID = -1;
+        Uri rowURI = null;
+        int uriMatch = uriMatcher.match(uri);
+
+        switch (uriMatch) {
+            case NOTES:
+                rowID = db.insert(NoteInfoEntry.TABLE_NAME, null, values);
+                rowURI = ContentUris.withAppendedId(Notes.CONTENT_URI, rowID);
+                break;
+            case COURSES:
+                rowID = db.insert(CourseInfoEntry.TABLE_NAME, null, values);
+                rowURI = ContentUris.withAppendedId(Courses.CONTENT_URI, rowID);
+                break;
+            case NOTES_EXPANDED:
+                // throw exception showing this is a read-only table
+                break;
+        }
+
+        return rowURI;
     }
 
     @Override

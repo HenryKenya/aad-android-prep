@@ -51,6 +51,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     private SimpleCursorAdapter adapterCourses;
     private boolean courseQueryFinished;
     private boolean notesQueryFinished;
+    private Uri noteUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,7 +192,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         @SuppressLint("StaticFieldLeak") AsyncTask task = new AsyncTask() {
             @Override
             protected Object doInBackground(Object[] objects) {
-                Uri uri = getContentResolver().insert(Notes.CONTENT_URI, values);
+                noteUri = getContentResolver().insert(Notes.CONTENT_URI, values);
                 return null;
             }
         };

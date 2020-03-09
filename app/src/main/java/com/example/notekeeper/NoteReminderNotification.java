@@ -19,7 +19,7 @@ public class NoteReminderNotification {
 
     private static final String NOTIFICATION_TAG = "NoteReminder";
 
-    public static void notify(final Context context,
+    public static void notify(final Context context, final String noteTitle,
                               final String noteText) {
         final Resources res = context.getResources();
 
@@ -40,6 +40,11 @@ public class NoteReminderNotification {
                 .setLargeIcon(picture)
 
                 .setTicker("Review note")
+
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(noteText)
+                        .setBigContentTitle(noteTitle)
+                        .setSummaryText("Review note"))
 
                 // .setNumber(number)
 

@@ -19,8 +19,8 @@ public class DataManager {
     public static DataManager getInstance() {
         if (ourInstance == null) {
             ourInstance = new DataManager();
-            // ourInstance.initializeCourses();
-            // ourInstance.initializeExampleNotes();
+//            ourInstance.initializeCourses();
+//            ourInstance.initializeExampleNotes();
         }
         return ourInstance;
     }
@@ -252,6 +252,16 @@ public class DataManager {
         modules.add(new ModuleInfo("java_core_m10", "Persisting Objects with Serialization"));
 
         return new CourseInfo("java_core", "Java Fundamentals: The Core Platform", modules);
+    }
+
+    public int createNewNote(CourseInfo course, String noteTitle, String noteText) {
+        int index = createNewNote();
+        NoteInfo note = getNotes().get(index);
+        note.setCourse(course);
+        note.setTitle(noteTitle);
+        note.setText(noteText);
+
+        return index;
     }
     //endregion
 

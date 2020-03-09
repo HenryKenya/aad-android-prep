@@ -17,4 +17,8 @@
         android:id="@+id/action_share_email"
         android:title="@string/share_as_email"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_set_reminder"
+        android:title="@string/set_reminder"
+        app:showAsAction="never" />
 </menu>

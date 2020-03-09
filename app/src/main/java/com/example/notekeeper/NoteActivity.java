@@ -2,6 +2,7 @@ package com.example.notekeeper;
 
 import android.annotation.SuppressLint;
 import android.app.LoaderManager;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
 import android.content.Intent;
@@ -361,23 +362,14 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     @SuppressLint("StaticFieldLeak")
     private CursorLoader createNotesLoader() {
         notesQueryFinished = false;
-        return new CursorLoader(this) {
-            @Override
-            protected Cursor onLoadInBackground() {
-                SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-                String selection = NoteInfoEntry._ID + " = ?";
-                String[] selectionArgs = {Integer.toString(noteId)};
-
-                final String[] noteColumns = {
-                        NoteInfoEntry.COLUMN_NOTE_TITLE,
-                        NoteInfoEntry.COLUMN_NOTE_TEXT,
-                        NoteInfoEntry.COLUMN_COURSE_ID,
-                        NoteInfoEntry._ID};
-
-                return db.query(NoteInfoEntry.TABLE_NAME, noteColumns, selection, selectionArgs, null, null, null);
-            }
+        String[] noteColumns = {
+                Notes.COLUMN_COURSE_ID,
+                Notes.COLUMN_NOTE_TITLE,
+                Notes.COLUMN_NOTE_TEXT
         };
+        noteUri = ContentUris.withAppendedId(Notes.CONTENT_URI, noteId);
+        return new CursorLoader(this, noteUri, noteColumns, null, null, null);
+
     }
 
     @Override

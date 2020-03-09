@@ -189,14 +189,15 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
         // SQLiteDatabase db = dbHelper.getWritableDatabase();
         // noteId = (int) db.insert(NoteInfoEntry.TABLE_NAME, null, values);
-        @SuppressLint("StaticFieldLeak") AsyncTask task = new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                noteUri = getContentResolver().insert(Notes.CONTENT_URI, values);
-                return null;
-            }
-        };
-        task.execute();
+//        @SuppressLint("StaticFieldLeak") AsyncTask task = new AsyncTask() {
+//            @Override
+//            protected Object doInBackground(Object[] objects) {
+//                noteUri = getContentResolver().insert(Notes.CONTENT_URI, values);
+//                return null;
+//            }
+//        };
+//        task.execute();
+        noteUri = getContentResolver().insert(Notes.CONTENT_URI, values);
     }
 
     @Override

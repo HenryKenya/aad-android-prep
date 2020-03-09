@@ -27,6 +27,8 @@ public class NoteReminderNotification {
         Intent noteActivityIntent = new Intent(context, NoteActivity.class);
         noteActivityIntent.putExtra(NoteActivity.NOTE_ID, noteId);
 
+        Intent noteListActivityIntent = new Intent(context, NoteListActivity.class);
+
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "01")
 
                 .setDefaults(Notification.DEFAULT_ALL)
@@ -54,7 +56,15 @@ public class NoteReminderNotification {
                                 0,
                                 noteActivityIntent,
                                 PendingIntent.FLAG_UPDATE_CURRENT))
-
+                .addAction(
+                        0,
+                        "View all notes",
+                        PendingIntent.getActivity(
+                                context,
+                                0,
+                                noteListActivityIntent,
+                                PendingIntent.FLAG_UPDATE_CURRENT)
+                )
                 // handle oreo
                 .setChannelId(CHANNEL_ID)
 

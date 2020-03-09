@@ -190,15 +190,15 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
         // SQLiteDatabase db = dbHelper.getWritableDatabase();
         // noteId = (int) db.insert(NoteInfoEntry.TABLE_NAME, null, values);
-//        @SuppressLint("StaticFieldLeak") AsyncTask task = new AsyncTask() {
-//            @Override
-//            protected Object doInBackground(Object[] objects) {
-//                noteUri = getContentResolver().insert(Notes.CONTENT_URI, values);
-//                return null;
-//            }
-//        };
-//        task.execute();
-        noteUri = getContentResolver().insert(Notes.CONTENT_URI, values);
+        @SuppressLint("StaticFieldLeak") AsyncTask task = new AsyncTask() {
+            @Override
+            protected Object doInBackground(Object[] objects) {
+                noteUri = getContentResolver().insert(Notes.CONTENT_URI, values);
+                return null;
+            }
+        };
+        task.execute();
+        //noteUri = getContentResolver().insert(Notes.CONTENT_URI, values);
     }
 
     @Override
@@ -279,18 +279,13 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void deleteNoteFromDatabase() {
-        final String selection = NoteInfoEntry._ID + " = ? ";
-        final String[] selectionArgs = {Integer.toString(noteId)};
-
         @SuppressLint("StaticFieldLeak") AsyncTask task = new AsyncTask() {
             @Override
-            protected Object doInBackground(Object[] objects) {
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                db.delete(NoteInfoEntry.TABLE_NAME, selection, selectionArgs);
+            protected Object doInBackground(Object[] params) {
+                getContentResolver().delete(noteUri, null, null);
                 return null;
             }
         };
-
         task.execute();
     }
 
@@ -327,16 +322,12 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void saveNoteToDatabase(String courseId, String noteTitle, String noteText) {
-        String selection = NoteInfoEntry._ID + " = ?";
-        String[] selectionArgs = {Integer.toString(noteId)};
-
         ContentValues values = new ContentValues();
-        values.put(NoteInfoEntry.COLUMN_COURSE_ID, courseId);
-        values.put(NoteInfoEntry.COLUMN_NOTE_TITLE, noteTitle);
-        values.put(NoteInfoEntry.COLUMN_NOTE_TEXT, noteText);
+        values.put(Notes.COLUMN_COURSE_ID, courseId);
+        values.put(Notes.COLUMN_NOTE_TITLE, noteTitle);
+        values.put(Notes.COLUMN_NOTE_TEXT, noteText);
 
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        db.update(NoteInfoEntry.TABLE_NAME, values, selection, selectionArgs);
+        getContentResolver().update(noteUri, values, null, null);
     }
 
     @Override

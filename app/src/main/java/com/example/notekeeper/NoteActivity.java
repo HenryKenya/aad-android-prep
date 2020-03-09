@@ -232,7 +232,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void showReminderNotification() {
-        
+        NoteReminderNotification.notify(this, "Dummy test", 0);
     }
 
     @Override

@@ -8,7 +8,9 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -159,6 +161,18 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
         // loadNotes();
         getLoaderManager().restartLoader(LOADER_ALL_NOTES, null, this);
         updateNavHeader();
+
+        openDrawer();
+    }
+
+    private void openDrawer() {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                drawerLayout.openDrawer(Gravity.LEFT);
+            }
+        }, 1000);
     }
 
     private void loadNotes() {

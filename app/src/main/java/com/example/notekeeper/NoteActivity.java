@@ -183,6 +183,18 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         // DataManager dm = DataManager.getInstance();
         // noteId = dm.createNewNote();
         // note = DataManager.getInstance().getNotes().get(noteId);
+        @SuppressLint("StaticFieldLeak") AsyncTask<ContentValues, Void, Uri> task = new AsyncTask<ContentValues, Void, Uri>() {
+            @Override
+            protected Uri doInBackground(ContentValues... contentValues) {
+                ContentValues insertValues = contentValues[0];
+                return getContentResolver().insert(Notes.CONTENT_URI, insertValues);
+            }
+
+            @Override
+            protected void onPostExecute(Uri uri) {
+                noteUri = uri;
+            }
+        };
         final ContentValues values = new ContentValues();
         values.put(Notes.COLUMN_NOTE_TEXT, "");
         values.put(Notes.COLUMN_NOTE_TITLE, "");
@@ -190,15 +202,9 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
 
         // SQLiteDatabase db = dbHelper.getWritableDatabase();
         // noteId = (int) db.insert(NoteInfoEntry.TABLE_NAME, null, values);
-        @SuppressLint("StaticFieldLeak") AsyncTask task = new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] objects) {
-                noteUri = getContentResolver().insert(Notes.CONTENT_URI, values);
-                return null;
-            }
-        };
-        task.execute();
+
         //noteUri = getContentResolver().insert(Notes.CONTENT_URI, values);
+        task.execute(values);
     }
 
     @Override

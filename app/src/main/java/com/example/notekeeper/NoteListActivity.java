@@ -166,6 +166,7 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void openDrawer() {
+        // todo: you can implement this with a flag on shared preference to ensure it's only opened once
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override

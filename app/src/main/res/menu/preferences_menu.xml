@@ -5,6 +5,9 @@
         android:id="@+id/action_backup_notes"
         android:title="Backup notes" />
     <item
+        android:id="@+id/action_upload_notes"
+        android:title="Upload notes" />
+    <item
         android:id="@+id/action_settings"
         android:title="Settings" />
 </menu>

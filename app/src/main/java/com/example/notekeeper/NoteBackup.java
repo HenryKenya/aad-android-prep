@@ -4,28 +4,30 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import com.example.notekeeper.NoteKeeperProviderContract.Notes;
+
 public class NoteBackup {
     public static final String ALL_COURSES = "ALL_COURSES";
     private static final String TAG = NoteBackup.class.getSimpleName();
 
     public static void doBackup(Context context, String backupCourseId) {
         String[] columns = {
-                NoteKeeperProviderContract.Notes.COLUMN_COURSE_ID,
-                NoteKeeperProviderContract.Notes.COLUMN_NOTE_TITLE,
-                NoteKeeperProviderContract.Notes.COLUMN_NOTE_TEXT,
+                Notes.COLUMN_COURSE_ID,
+                Notes.COLUMN_NOTE_TITLE,
+                Notes.COLUMN_NOTE_TEXT,
         };
 
         String selection = null;
         String[] selectionArgs = null;
         if (!backupCourseId.equals(ALL_COURSES)) {
-            selection = NoteKeeperProviderContract.Notes.COLUMN_COURSE_ID + " = ?";
+            selection = Notes.COLUMN_COURSE_ID + " = ?";
             selectionArgs = new String[]{backupCourseId};
         }
 
-        Cursor cursor = context.getContentResolver().query(NoteKeeperProviderContract.Notes.CONTENT_URI, columns, selection, selectionArgs, null);
-        int courseIdPos = cursor.getColumnIndex(NoteKeeperProviderContract.Notes.COLUMN_COURSE_ID);
-        int noteTitlePos = cursor.getColumnIndex(NoteKeeperProviderContract.Notes.COLUMN_NOTE_TITLE);
-        int noteTextPos = cursor.getColumnIndex(NoteKeeperProviderContract.Notes.COLUMN_NOTE_TEXT);
+        Cursor cursor = context.getContentResolver().query(Notes.CONTENT_URI, columns, selection, selectionArgs, null);
+        int courseIdPos = cursor.getColumnIndex(Notes.COLUMN_COURSE_ID);
+        int noteTitlePos = cursor.getColumnIndex(Notes.COLUMN_NOTE_TITLE);
+        int noteTextPos = cursor.getColumnIndex(Notes.COLUMN_NOTE_TEXT);
 
         Log.i(TAG, ">>>***   BACKUP START - Thread: " + Thread.currentThread().getId() + "   ***<<<");
         while (cursor.moveToNext()) {

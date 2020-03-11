@@ -166,7 +166,7 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
         getLoaderManager().restartLoader(LOADER_ALL_NOTES, null, this);
         updateNavHeader();
 
-        openDrawer();
+        // openDrawer();
     }
 
     private void openDrawer() {

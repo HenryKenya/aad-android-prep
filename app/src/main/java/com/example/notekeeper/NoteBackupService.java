@@ -14,6 +14,7 @@ public class NoteBackupService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             String backupCourseId = intent.getStringExtra(COURSE_ID);
+            NoteBackup.doBackup(this, backupCourseId);
         }
     }
 }

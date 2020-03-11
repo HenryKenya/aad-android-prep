@@ -1,6 +1,9 @@
 package com.example.notekeeper;
 
 import android.app.LoaderManager;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.Loader;
@@ -38,6 +41,7 @@ import java.util.List;
 
 public class NoteListActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, LoaderManager.LoaderCallbacks<Cursor> {
     public static final int LOADER_ALL_NOTES = 0;
+    public static final int NOTE_UPLOADER_JOB_ID = 1;
     private NoteRecyclerAdapter notesAdapter;
     DrawerLayout drawerLayout;
     Toolbar toolbar;
@@ -247,8 +251,20 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
             return true;
         } else if (itemId == R.id.action_backup_notes) {
             backupNotes();
+        } else if (itemId == R.id.action_upload_notes) {
+            scheduleNoteUpload();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void scheduleNoteUpload() {
+        ComponentName componentName = new ComponentName(this, NoteUploaderJobService.class);
+        JobInfo jobInfo = new JobInfo
+                .Builder(NOTE_UPLOADER_JOB_ID, componentName)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .build();
+        JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+        jobScheduler.schedule(jobInfo);
     }
 
     private void backupNotes() {

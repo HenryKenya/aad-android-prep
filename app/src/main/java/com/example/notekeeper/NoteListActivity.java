@@ -252,7 +252,9 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void backupNotes() {
-        
+        Intent intent = new Intent(this, NoteBackupService.class);
+        intent.putExtra(NoteBackupService.EXTRA_COURSE_ID, NoteBackup.ALL_COURSES);
+        startService(intent);
     }
 
     @Override

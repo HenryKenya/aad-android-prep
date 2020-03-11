@@ -12,8 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
-            android:name=".NoteBackupService"
+            android:name=".NoteUploaderJobService"
+            android:enabled="true"
             android:exported="false"></service>
+        <service
+            android:name=".NoteBackupService"
+            android:exported="false" />
 
         <provider
             android:name=".NoteKeeperProvider"

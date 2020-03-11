@@ -97,23 +97,25 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
     }
 
     private void initializeDisplayContent() {
-//        final ListView notesList = findViewById(R.id.list_notes); // make it accessible in anonymous class
-//
-//        List<NoteInfo> notes = DataManager.getInstance().getNotes();
-//
-//        adapterNotes = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notes);
-//
-//        notesList.setAdapter(adapterNotes);
-//
-//        notesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                Intent intent = new Intent(NoteListActivity.this, NoteActivity.class);
-//                //NoteInfo note = (NoteInfo) notesList.getItemAtPosition(position);
-//                intent.putExtra(NoteActivity.NOTE_ID, position);
-//                startActivity(intent);
-//            }
-//        });
+/*
+        final ListView notesList = findViewById(R.id.list_notes); // make it accessible in anonymous class
+
+        List<NoteInfo> notes = DataManager.getInstance().getNotes();
+
+        adapterNotes = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, notes);
+
+        notesList.setAdapter(adapterNotes);
+
+        notesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(NoteListActivity.this, NoteActivity.class);
+                //NoteInfo note = (NoteInfo) notesList.getItemAtPosition(position);
+                intent.putExtra(NoteActivity.NOTE_ID, position);
+                startActivity(intent);
+            }
+        });
+*/
         DataManager.loadFromDatabase(mdbOpenHelper);
 
         recyclerItems = findViewById(R.id.list_notes);
@@ -157,8 +159,10 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
     @Override
     protected void onResume() {
         super.onResume();
-        // adapterNotes.notifyDataSetChanged();
-        // loadNotes();
+        /*
+         adapterNotes.notifyDataSetChanged();
+         loadNotes();
+        */
         getLoaderManager().restartLoader(LOADER_ALL_NOTES, null, this);
         updateNavHeader();
 
@@ -241,8 +245,14 @@ public class NoteListActivity extends AppCompatActivity implements NavigationVie
         if (itemId == R.id.action_settings) {
             startActivity(new Intent(this, SettingsActivity.class));
             return true;
+        } else if (itemId == R.id.action_backup_notes) {
+            backupNotes();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void backupNotes() {
+        
     }
 
     @Override

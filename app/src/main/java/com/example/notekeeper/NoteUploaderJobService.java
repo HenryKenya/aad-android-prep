@@ -22,11 +22,13 @@ public class NoteUploaderJobService extends JobService {
                 String stringURI = jobParameters.getExtras().getString(EXTRA_DATA_URI);
                 Uri dataURI = Uri.parse(stringURI);
                 noteUploader.doUpload(dataURI);
+                jobFinished(jobParameters, false); // passing true indicates that task needs to be re-run
                 return null;
             }
         };
         noteUploader = new NoteUploader(this);
-        return false;
+        task.execute(params);
+        return true;
     }
 
     @Override

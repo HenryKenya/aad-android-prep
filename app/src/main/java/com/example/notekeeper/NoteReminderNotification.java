@@ -29,6 +29,9 @@ public class NoteReminderNotification {
 
         Intent noteListActivityIntent = new Intent(context, NoteListActivity.class);
 
+        Intent backupServiceIntent = new Intent(context, NoteBackupService.class);
+        backupServiceIntent.putExtra(NoteBackupService.EXTRA_COURSE_ID, NoteBackup.ALL_COURSES);
+
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "01")
 
                 .setDefaults(Notification.DEFAULT_ALL)
@@ -63,6 +66,15 @@ public class NoteReminderNotification {
                                 context,
                                 0,
                                 noteListActivityIntent,
+                                PendingIntent.FLAG_UPDATE_CURRENT)
+                )
+                .addAction(
+                        0,
+                        "Backup notes",
+                        PendingIntent.getService(
+                                context,
+                                0,
+                                backupServiceIntent,
                                 PendingIntent.FLAG_UPDATE_CURRENT)
                 )
                 // handle oreo

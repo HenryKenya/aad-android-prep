@@ -22,7 +22,8 @@ public class NoteUploaderJobService extends JobService {
                 String stringURI = jobParameters.getExtras().getString(EXTRA_DATA_URI);
                 Uri dataURI = Uri.parse(stringURI);
                 noteUploader.doUpload(dataURI);
-                jobFinished(jobParameters, false); // passing true indicates that task needs to be re-run
+                if (!noteUploader.isCanceled())
+                    jobFinished(jobParameters, false); // passing true indicates that task needs to be re-run
                 return null;
             }
         };
@@ -33,6 +34,7 @@ public class NoteUploaderJobService extends JobService {
 
     @Override
     public boolean onStopJob(JobParameters params) {
-        return false;
+        noteUploader.cancel();
+        return true;
     }
 }

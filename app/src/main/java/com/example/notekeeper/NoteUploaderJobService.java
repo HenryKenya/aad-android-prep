@@ -4,6 +4,8 @@ import android.app.job.JobParameters;
 import android.app.job.JobService;
 
 public class NoteUploaderJobService extends JobService {
+    public static final String EXTRA_DATA_URI = "com.example.notekeeper.extras.DATA_URI";
+
     public NoteUploaderJobService() {
     }
 

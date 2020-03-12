@@ -1,7 +1,9 @@
 package com.example.notekeeper;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.LoaderManager;
+import android.app.PendingIntent;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.CursorLoader;
@@ -12,6 +14,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -243,7 +246,22 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         String noteTitle = textNoteTitle.getText().toString();
         String noteText = textNoteText.getText().toString();
         int id = (int) ContentUris.parseId(noteUri);
-        NoteReminderNotification.notify(this, noteTitle, noteText, id);
+
+        Intent alarmIntent = new Intent(this, NoteReminderReceiver.class);
+        alarmIntent.putExtra(NoteReminderReceiver.EXTRA_NOTE_TITLE, noteTitle);
+        alarmIntent.putExtra(NoteReminderReceiver.EXTRA_NOTE_TEXT, noteText);
+        alarmIntent.putExtra(NoteReminderReceiver.EXTRA_NOTE_ID, id);
+
+        PendingIntent pendingIntent = PendingIntent
+                .getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+
+        long currentTimeInMilliseconds = SystemClock.elapsedRealtime();
+        long TEN_SECONDS = 10 * 1000;
+        long alarmTime = currentTimeInMilliseconds + TEN_SECONDS;
+
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME, alarmTime, pendingIntent);
     }
 
     @Override

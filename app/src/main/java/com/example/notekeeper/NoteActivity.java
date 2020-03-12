@@ -140,6 +140,8 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
         spinnerCourses.setSelection(courseIndex);
         textNoteTitle.setText(noteTitle);
         textNoteText.setText(noteText);
+
+        CourseEventBroadcastHelper.sendEventBroadcast(this, courseId, "Editing note");
     }
 
     private int getIndexOfCourseId(String courseId) {

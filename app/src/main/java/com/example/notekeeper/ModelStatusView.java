@@ -89,8 +89,8 @@ public class ModelStatusView extends View {
         moduleRectanges = new Rect[mModuleStatus.length];
 
         for (int moduleIndex = 0; moduleIndex < moduleRectanges.length; moduleIndex++) {
-            int x = (int) (moduleIndex * (shapeSize + shapeSpacing));
-            int y = 0;
+            int x = getPaddingLeft() + (int) (moduleIndex * (shapeSize + shapeSpacing));
+            int y = getPaddingTop();
             moduleRectanges[moduleIndex] = new Rect(x, y, x + (int) shapeSize, y + (int) shapeSize);
         }
     }

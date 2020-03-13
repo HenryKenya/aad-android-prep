@@ -14,6 +14,7 @@ import android.view.View;
  * TODO: document your custom view class.
  */
 public class ModelStatusView extends View {
+    public static final int EDIT_MODE_MODULE_COUNT = 7;
     private String mExampleString; // TODO: use a default from R.string...
     private int mExampleColor = Color.RED; // TODO: use a default from R.color...
     private float mExampleDimension = 0; // TODO: use a default from R.dimen...
@@ -46,6 +47,11 @@ public class ModelStatusView extends View {
     }
 
     private void init(AttributeSet attrs, int defStyle) {
+
+        if (isInEditMode()) {
+            setupEditModeValues();
+        }
+
         // Load attributes
         final TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.ModelStatusView, defStyle, 0);
@@ -70,6 +76,15 @@ public class ModelStatusView extends View {
 
     }
 
+    private void setupEditModeValues() {
+        boolean[] exampleModuleValues = new boolean[EDIT_MODE_MODULE_COUNT];
+        int middle = EDIT_MODE_MODULE_COUNT / 2;
+        for (int i = 0; i < middle; i++)
+            exampleModuleValues[i] = true;
+        
+        setmModuleStatus(exampleModuleValues);
+    }
+
     private void setUpModelRectangle() {
         moduleRectanges = new Rect[mModuleStatus.length];
 
@@ -78,10 +93,6 @@ public class ModelStatusView extends View {
             int y = 0;
             moduleRectanges[moduleIndex] = new Rect(x, y, x + (int) shapeSize, y + (int) shapeSize);
         }
-    }
-
-    private void invalidateTextPaintAndMeasurements() {
-
     }
 
     @Override
@@ -118,7 +129,6 @@ public class ModelStatusView extends View {
      */
     public void setExampleString(String exampleString) {
         mExampleString = exampleString;
-        invalidateTextPaintAndMeasurements();
     }
 
     /**
@@ -138,7 +148,7 @@ public class ModelStatusView extends View {
      */
     public void setExampleColor(int exampleColor) {
         mExampleColor = exampleColor;
-        invalidateTextPaintAndMeasurements();
+
     }
 
     /**
@@ -158,7 +168,7 @@ public class ModelStatusView extends View {
      */
     public void setExampleDimension(float exampleDimension) {
         mExampleDimension = exampleDimension;
-        invalidateTextPaintAndMeasurements();
+
     }
 
     /**

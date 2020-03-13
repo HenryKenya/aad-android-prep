@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -17,6 +18,7 @@ public class ModelStatusView extends View {
     public static final int EDIT_MODE_MODULE_COUNT = 7;
     public static final int INVALID_INDEX = -1;
     public static final int SHAPE_CIRCLE = 0;
+    public static final float DEFAULT_OUTLINE_WIDTH_DP = 2f;
     private boolean[] mModuleStatus;
     private float outlineWidth;
     private float shapeSize;
@@ -47,23 +49,26 @@ public class ModelStatusView extends View {
 
     private void init(AttributeSet attrs, int defStyle) {
 
-        if (isInEditMode()) {
-            setupEditModeValues();
-        }
+        if (isInEditMode()) setupEditModeValues();
+
+        // assign values to dips
+        DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
+        float displayDensity = dm.density;
+        float defaultOutlineWidthPixels = displayDensity * DEFAULT_OUTLINE_WIDTH_DP;
 
         // Load attributes
         final TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.ModelStatusView, defStyle, 0);
 
         outlineColor = a.getColor(R.styleable.ModelStatusView_outlineColor, Color.BLACK);
         shape = a.getInt(R.styleable.ModelStatusView_shape, SHAPE_CIRCLE);
-        outlineWidth = a.getDimension(R.styleable.ModelStatusView_outlineWidth, 6f);
+        outlineWidth = a.getDimension(R.styleable.ModelStatusView_outlineWidth, defaultOutlineWidthPixels);
 
 
         a.recycle();
 
         //outlineWidth = 6f;
-        shapeSize = 144f;
-        shapeSpacing = 33f;
+        shapeSize = (80f / displayDensity) + 0.5f;
+        shapeSpacing = (33f / displayDensity) + 0.5f;
         radius = (shapeSize - outlineWidth) / 2;
 
         // outlineColor = Color.BLACK;

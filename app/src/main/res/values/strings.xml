@@ -40,5 +40,6 @@
         viverra rhoncus sit amet nec magna. Donec lacinia ligula at libero volutpat volutpat nec nec
         tortor.
     </string>
+    <string name="create_new_note">Create new note</string>
 
 </resources>

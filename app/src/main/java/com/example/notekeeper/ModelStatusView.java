@@ -81,7 +81,7 @@ public class ModelStatusView extends View {
         int middle = EDIT_MODE_MODULE_COUNT / 2;
         for (int i = 0; i < middle; i++)
             exampleModuleValues[i] = true;
-        
+
         setmModuleStatus(exampleModuleValues);
     }
 

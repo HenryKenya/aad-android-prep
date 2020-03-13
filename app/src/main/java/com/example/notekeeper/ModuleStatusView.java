@@ -6,15 +6,25 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
+import androidx.customview.widget.ExploreByTouchHelper;
+
+import java.util.List;
 
 /**
  * TODO: document your custom view class.
  */
-public class ModelStatusView extends View {
+public class ModuleStatusView extends View {
     public static final int EDIT_MODE_MODULE_COUNT = 7;
     public static final int INVALID_INDEX = -1;
     public static final int SHAPE_CIRCLE = 0;
@@ -31,18 +41,19 @@ public class ModelStatusView extends View {
     private float radius;
     private int maxHorizontalModules;
     private int shape;
+    private ModuleStatusAccessibilityHelper accessibilityHelper;
 
-    public ModelStatusView(Context context) {
+    public ModuleStatusView(Context context) {
         super(context);
         init(null, 0);
     }
 
-    public ModelStatusView(Context context, AttributeSet attrs) {
+    public ModuleStatusView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(attrs, 0);
     }
 
-    public ModelStatusView(Context context, AttributeSet attrs, int defStyle) {
+    public ModuleStatusView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         init(attrs, defStyle);
     }
@@ -51,17 +62,21 @@ public class ModelStatusView extends View {
 
         if (isInEditMode()) setupEditModeValues();
 
+        setFocusable(true);
+        accessibilityHelper = new ModuleStatusAccessibilityHelper(this);
+        ViewCompat.setAccessibilityDelegate(this, accessibilityHelper);
+
         // assign values to dips
         DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
         float displayDensity = dm.density;
         float defaultOutlineWidthPixels = displayDensity * DEFAULT_OUTLINE_WIDTH_DP;
 
         // Load attributes
-        final TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.ModelStatusView, defStyle, 0);
+        final TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.ModuleStatusView, defStyle, 0);
 
-        outlineColor = a.getColor(R.styleable.ModelStatusView_outlineColor, Color.BLACK);
-        shape = a.getInt(R.styleable.ModelStatusView_shape, SHAPE_CIRCLE);
-        outlineWidth = a.getDimension(R.styleable.ModelStatusView_outlineWidth, defaultOutlineWidthPixels);
+        outlineColor = a.getColor(R.styleable.ModuleStatusView_outlineColor, Color.BLACK);
+        shape = a.getInt(R.styleable.ModuleStatusView_shape, SHAPE_CIRCLE);
+        outlineWidth = a.getDimension(R.styleable.ModuleStatusView_outlineWidth, defaultOutlineWidthPixels);
 
 
         a.recycle();
@@ -82,6 +97,23 @@ public class ModelStatusView extends View {
         paintFill.setStyle(Paint.Style.FILL);
         paintFill.setColor(fillColor);
 
+    }
+
+    // forward callbacks to helper
+    @Override
+    protected void onFocusChanged(boolean gainFocus, int direction, @Nullable Rect previouslyFocusedRect) {
+        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+        accessibilityHelper.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+    }
+
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        return accessibilityHelper.dispatchKeyEvent(event) || super.dispatchKeyEvent(event);
+    }
+
+    @Override
+    protected boolean dispatchHoverEvent(MotionEvent event) {
+        return accessibilityHelper.dispatchHoverEvent(event) || super.dispatchHoverEvent(event);
     }
 
     private void setupEditModeValues() {
@@ -210,5 +242,32 @@ public class ModelStatusView extends View {
 
     public void setmModuleStatus(boolean[] mModuleStatus) {
         this.mModuleStatus = mModuleStatus;
+    }
+
+    private class ModuleStatusAccessibilityHelper extends ExploreByTouchHelper {
+
+        public ModuleStatusAccessibilityHelper(@NonNull View host) {
+            super(host);
+        }
+
+        @Override
+        protected int getVirtualViewAt(float x, float y) {
+            return 0;
+        }
+
+        @Override
+        protected void getVisibleVirtualViews(List<Integer> virtualViewIds) {
+
+        }
+
+        @Override
+        protected void onPopulateNodeForVirtualView(int virtualViewId, @NonNull AccessibilityNodeInfoCompat node) {
+
+        }
+
+        @Override
+        protected boolean onPerformActionForVirtualView(int virtualViewId, int action, @Nullable Bundle arguments) {
+            return false;
+        }
     }
 }

@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:hint="@string/note_text_hint" />
 
-    <com.example.notekeeper.ModelStatusView
+    <com.example.notekeeper.ModuleStatusView
         android:id="@+id/module_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

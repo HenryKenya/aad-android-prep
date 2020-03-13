@@ -56,7 +56,7 @@ public class NoteActivity extends AppCompatActivity implements LoaderManager.Loa
     private boolean courseQueryFinished;
     private boolean notesQueryFinished;
     private Uri noteUri;
-    private ModelStatusView viewModuleStatus;
+    private ModuleStatusView viewModuleStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

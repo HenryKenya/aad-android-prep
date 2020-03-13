@@ -5,8 +5,8 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -19,10 +19,16 @@ public class ModelStatusView extends View {
     private float mExampleDimension = 0; // TODO: use a default from R.dimen...
     private Drawable mExampleDrawable;
 
-    private TextPaint mTextPaint;
-    private float mTextWidth;
-    private float mTextHeight;
     private boolean[] mModuleStatus;
+    private float outlineWidth;
+    private float shapeSize;
+    private float shapeSpacing;
+    private Rect[] moduleRectanges;
+    private int outlineColor;
+    private Paint paintOutline;
+    private int fillColor;
+    private Paint paintFill;
+    private float radius;
 
     public ModelStatusView(Context context) {
         super(context);
@@ -43,69 +49,55 @@ public class ModelStatusView extends View {
         // Load attributes
         final TypedArray a = getContext().obtainStyledAttributes(
                 attrs, R.styleable.ModelStatusView, defStyle, 0);
-
-        mExampleString = a.getString(
-                R.styleable.ModelStatusView_exampleString);
-        mExampleColor = a.getColor(
-                R.styleable.ModelStatusView_exampleColor,
-                mExampleColor);
-        // Use getDimensionPixelSize or getDimensionPixelOffset when dealing with
-        // values that should fall on pixel boundaries.
-        mExampleDimension = a.getDimension(
-                R.styleable.ModelStatusView_exampleDimension,
-                mExampleDimension);
-
-        if (a.hasValue(R.styleable.ModelStatusView_exampleDrawable)) {
-            mExampleDrawable = a.getDrawable(
-                    R.styleable.ModelStatusView_exampleDrawable);
-            mExampleDrawable.setCallback(this);
-        }
-
         a.recycle();
 
-        // Set up a default TextPaint object
-        mTextPaint = new TextPaint();
-        mTextPaint.setFlags(Paint.ANTI_ALIAS_FLAG);
-        mTextPaint.setTextAlign(Paint.Align.LEFT);
+        outlineWidth = 6f;
+        shapeSize = 144f;
+        shapeSpacing = 33f;
+        radius = (shapeSize - outlineWidth) / 2;
+        setUpModelRectangle();
 
-        // Update TextPaint and text measurements from attributes
-        invalidateTextPaintAndMeasurements();
+        outlineColor = Color.BLACK;
+        paintOutline = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paintOutline.setStyle(Paint.Style.STROKE);
+        paintOutline.setStrokeWidth(outlineWidth);
+        paintOutline.setColor(outlineColor);
+
+        fillColor = getContext().getResources().getColor(R.color.pluralsight_orange);
+        paintFill = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paintFill.setStyle(Paint.Style.FILL);
+        paintFill.setColor(fillColor);
+
+    }
+
+    private void setUpModelRectangle() {
+        moduleRectanges = new Rect[mModuleStatus.length];
+
+        for (int moduleIndex = 0; moduleIndex < moduleRectanges.length; moduleIndex++) {
+            int x = (int) (moduleIndex * (shapeSize + shapeSpacing));
+            int y = 0;
+            moduleRectanges[moduleIndex] = new Rect(x, y, x + (int) shapeSize, y + (int) shapeSize);
+        }
     }
 
     private void invalidateTextPaintAndMeasurements() {
-        mTextPaint.setTextSize(mExampleDimension);
-        mTextPaint.setColor(mExampleColor);
-        mTextWidth = mTextPaint.measureText(mExampleString);
 
-        Paint.FontMetrics fontMetrics = mTextPaint.getFontMetrics();
-        mTextHeight = fontMetrics.bottom;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        for (int moduleIndex = 0; moduleIndex < moduleRectanges.length; moduleIndex++) {
+            float x = moduleRectanges[moduleIndex].centerX();
+            float y = moduleRectanges[moduleIndex].centerY();
 
-        // TODO: consider storing these as member variables to reduce
-        // allocations per draw cycle.
-        int paddingLeft = getPaddingLeft();
-        int paddingTop = getPaddingTop();
-        int paddingRight = getPaddingRight();
-        int paddingBottom = getPaddingBottom();
+            // filled in circle only for completed module
+            if (mModuleStatus[moduleIndex]) {
+                canvas.drawCircle(x, y, radius, paintFill);
+            }
 
-        int contentWidth = getWidth() - paddingLeft - paddingRight;
-        int contentHeight = getHeight() - paddingTop - paddingBottom;
-
-        // Draw the text.
-        canvas.drawText(mExampleString,
-                paddingLeft + (contentWidth - mTextWidth) / 2,
-                paddingTop + (contentHeight + mTextHeight) / 2,
-                mTextPaint);
-
-        // Draw the example drawable on top of the text.
-        if (mExampleDrawable != null) {
-            mExampleDrawable.setBounds(paddingLeft, paddingTop,
-                    paddingLeft + contentWidth, paddingTop + contentHeight);
-            mExampleDrawable.draw(canvas);
+            // outline
+            canvas.drawCircle(x, y, radius, paintOutline);
         }
     }
 

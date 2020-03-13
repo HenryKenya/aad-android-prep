@@ -30,6 +30,7 @@ public class ModelStatusView extends View {
     private int fillColor;
     private Paint paintFill;
     private float radius;
+    private int maxHorizontalModules;
 
     public ModelStatusView(Context context) {
         super(context);
@@ -114,13 +115,19 @@ public class ModelStatusView extends View {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int desiredWidth = 0;
-        int desiredHeight = 0;
+        int desiredWidth;
+        int desiredHeight;
 
-        desiredWidth = (int) ((mModuleStatus.length * (shapeSize + shapeSpacing)) - (shapeSpacing));
+        int specWidth = MeasureSpec.getSize(widthMeasureSpec);
+        int availableWidth = specWidth - getPaddingLeft() - getPaddingRight();
+        int horizontalModulesThatCanFit = (int) (availableWidth / (shapeSize + shapeSpacing));
+        maxHorizontalModules = Math.min(horizontalModulesThatCanFit, mModuleStatus.length);
+
+        desiredWidth = (int) ((maxHorizontalModules * (shapeSize + shapeSpacing)) - (shapeSpacing));
         desiredWidth += getPaddingRight() + getPaddingLeft();
 
-        desiredHeight = (int) shapeSize;
+        int rows = (mModuleStatus.length - 1) / maxHorizontalModules + 1;
+        desiredHeight = (int) ((rows * (shapeSize + shapeSpacing)) - shapeSpacing);
         desiredHeight += getPaddingBottom() + getPaddingTop();
 
         int width = resolveSizeAndState(desiredWidth, widthMeasureSpec, 0);

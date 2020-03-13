@@ -12,6 +12,7 @@ import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.accessibility.AccessibilityEvent;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -200,6 +201,8 @@ public class ModuleStatusView extends View {
             return;
         mModuleStatus[moduleIndex] = !mModuleStatus[moduleIndex];
         invalidate();
+        accessibilityHelper.invalidateVirtualView(moduleIndex);
+        accessibilityHelper.sendEventForVirtualView(moduleIndex, AccessibilityEvent.TYPE_VIEW_CLICKED);
     }
 
     private int findItemAtPoint(float x, float y) {
@@ -273,10 +276,17 @@ public class ModuleStatusView extends View {
 
             node.setCheckable(true);
             node.setChecked(mModuleStatus[virtualViewId]);
+
+            node.addAction(AccessibilityNodeInfoCompat.ACTION_CLICK);
         }
 
         @Override
         protected boolean onPerformActionForVirtualView(int virtualViewId, int action, @Nullable Bundle arguments) {
+            switch (action) {
+                case AccessibilityNodeInfoCompat.ACTION_CLICK:
+                    onModuleSelected(virtualViewId);
+                    return true;
+            }
             return false;
         }
     }

@@ -16,6 +16,7 @@ import android.view.View;
 public class ModelStatusView extends View {
     public static final int EDIT_MODE_MODULE_COUNT = 7;
     public static final int INVALID_INDEX = -1;
+    public static final int SHAPE_CIRCLE = 0;
     private boolean[] mModuleStatus;
     private float outlineWidth;
     private float shapeSize;
@@ -27,6 +28,7 @@ public class ModelStatusView extends View {
     private Paint paintFill;
     private float radius;
     private int maxHorizontalModules;
+    private int shape;
 
     public ModelStatusView(Context context) {
         super(context);
@@ -53,6 +55,8 @@ public class ModelStatusView extends View {
         final TypedArray a = getContext().obtainStyledAttributes(attrs, R.styleable.ModelStatusView, defStyle, 0);
 
         outlineColor = a.getColor(R.styleable.ModelStatusView_outlineColor, Color.BLACK);
+        shape = a.getInt(R.styleable.ModelStatusView_shape, SHAPE_CIRCLE);
+
 
         a.recycle();
 
@@ -111,17 +115,33 @@ public class ModelStatusView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         for (int moduleIndex = 0; moduleIndex < moduleRectanges.length; moduleIndex++) {
+            if (shape == SHAPE_CIRCLE) {
+                float x = moduleRectanges[moduleIndex].centerX();
+                float y = moduleRectanges[moduleIndex].centerY();
 
-            float x = moduleRectanges[moduleIndex].centerX();
-            float y = moduleRectanges[moduleIndex].centerY();
-
-            // filled in circle only for completed module
-            if (mModuleStatus[moduleIndex]) {
-                canvas.drawCircle(x, y, radius, paintFill);
+                // filled in circle only for completed module
+                if (mModuleStatus[moduleIndex]) {
+                    canvas.drawCircle(x, y, radius, paintFill);
+                }
+                // outline
+                canvas.drawCircle(x, y, radius, paintOutline);
+            } else {
+                drawSquare(canvas, moduleIndex);
             }
-            // outline
-            canvas.drawCircle(x, y, radius, paintOutline);
         }
+    }
+
+    private void drawSquare(Canvas canvas, int moduleIndex) {
+        Rect moduleRec = moduleRectanges[moduleIndex];
+        if (mModuleStatus[moduleIndex])
+            canvas.drawRect(moduleRec, paintFill);
+
+        canvas.drawRect(moduleRec.left + (outlineWidth / 2),
+                moduleRec.top + (outlineWidth / 2),
+                moduleRec.right - (outlineWidth / 2),
+                moduleRec.bottom - (outlineWidth / 2),
+                paintOutline);
+
     }
 
     @Override

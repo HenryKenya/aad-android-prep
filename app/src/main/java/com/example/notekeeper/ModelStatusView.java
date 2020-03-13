@@ -62,7 +62,6 @@ public class ModelStatusView extends View {
         shapeSize = 144f;
         shapeSpacing = 33f;
         radius = (shapeSize - outlineWidth) / 2;
-        setUpModelRectangle();
 
         outlineColor = Color.BLACK;
         paintOutline = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -86,20 +85,35 @@ public class ModelStatusView extends View {
         setmModuleStatus(exampleModuleValues);
     }
 
-    private void setUpModelRectangle() {
+    private void setUpModelRectangle(int width) {
+
+        int availableWidth = width - getPaddingRight() - getPaddingLeft();
+        int horizontalModulesThatCanFit = (int) (availableWidth / (shapeSpacing + shapeSize));
+        int maximumModules = Math.min(horizontalModulesThatCanFit, mModuleStatus.length);
+
         moduleRectanges = new Rect[mModuleStatus.length];
 
         for (int moduleIndex = 0; moduleIndex < moduleRectanges.length; moduleIndex++) {
-            int x = getPaddingLeft() + (int) (moduleIndex * (shapeSize + shapeSpacing));
-            int y = getPaddingTop();
+            int colum = moduleIndex % maximumModules;
+            int row = moduleIndex / maximumModules;
+
+            int x = getPaddingLeft() + (int) (colum * (shapeSize + shapeSpacing));
+            int y = getPaddingTop() + (int) (row * (shapeSize + shapeSpacing));
+
             moduleRectanges[moduleIndex] = new Rect(x, y, x + (int) shapeSize, y + (int) shapeSize);
         }
+    }
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        setUpModelRectangle(w);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         for (int moduleIndex = 0; moduleIndex < moduleRectanges.length; moduleIndex++) {
+
             float x = moduleRectanges[moduleIndex].centerX();
             float y = moduleRectanges[moduleIndex].centerY();
 

@@ -29,7 +29,7 @@
 
     <com.example.notekeeper.ModelStatusView
         android:id="@+id/module_status"
-        android:padding="5dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:padding="5dp" />
 </LinearLayout>

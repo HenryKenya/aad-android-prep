@@ -56,11 +56,12 @@ public class ModelStatusView extends View {
 
         outlineColor = a.getColor(R.styleable.ModelStatusView_outlineColor, Color.BLACK);
         shape = a.getInt(R.styleable.ModelStatusView_shape, SHAPE_CIRCLE);
+        outlineWidth = a.getDimension(R.styleable.ModelStatusView_outlineWidth, 6f);
 
 
         a.recycle();
 
-        outlineWidth = 6f;
+        //outlineWidth = 6f;
         shapeSize = 144f;
         shapeSpacing = 33f;
         radius = (shapeSize - outlineWidth) / 2;

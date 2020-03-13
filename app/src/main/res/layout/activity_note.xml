@@ -28,7 +28,8 @@
         android:hint="@string/note_text_hint" />
 
     <com.example.notekeeper.ModelStatusView
-        android:id="@+id/modelStatusView"
+        android:id="@+id/module_status"
+        android:padding="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 </LinearLayout>
